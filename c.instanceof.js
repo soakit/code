@@ -19,4 +19,4 @@ var Animal = function(name) {
 
 var dog = new Animal('dog')
 
-console.log(myInstanceof(dog, Animal))
+console.log('myInstanceof(dog, Animal) => ', myInstanceof(dog, Animal))

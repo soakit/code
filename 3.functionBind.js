@@ -1,16 +1,11 @@
-/**
- * 实现:bind
- */
-Function.prototype.bind2 = function (context) {
-    var self = this;
-    var slice = Array.prototype.slice
+Function.prototype.bind2 = function () {
+    var self = this
+    var [ctx, ...args] = arguments
 
-    // 取出bind对象后的参数
-    var args = slice.call(arguments, 1)
     var F = function () { }
 
     var fbound = function () {
-        self.apply(context, args.concat(slice.call(arguments)))
+        self.apply(ctx, args.concat([...arguments]))
     }
 
     F.prototype = this.prototype

@@ -1,24 +1,17 @@
 var throttle = function(fn, delay) {
+    var canRun = true
     var timer
-    var first = true
 
     return function() {
         var args = arguments
-        var self = this
-        if (first) {
-            first = false
-            fn.apply(self, args)
+        var context = this
+        if (!canRun) {
             return
         }
-
-        if (timer) {
-            return
-        }
-
+        canRun = false
         timer = setTimeout(function() {
-            clearTimeout(timer)
-            timer = null
-            fn.apply(self, args)
+            fn.apply(context, args)
+            canRun = true
         }, delay || 500)
     }
 }
