@@ -32,8 +32,7 @@ function myPromise(exec) {
 myPromise.prototype.then = function (onFulfilled, onRejected) {
     if (this.state === RESOLVED) {
         typeof onFulfilled === 'function' && this.onFulfilledFn.push(onFulfilled)
-    }
-    if (this.state === REJECTED) {
+    } else if (this.state === REJECTED) {
         typeof onRejected === 'function' && this.onRejectedFn.push(onRejected)
     }
 }

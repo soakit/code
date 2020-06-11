@@ -2,13 +2,20 @@ Function.prototype.bind2 = function () {
     var self = this
     var [ctx, ...args] = arguments
 
-    var F = function () { }
-
     var fbound = function () {
-        self.apply(ctx, args.concat([...arguments]))
+        // this instanceof fbound === true时，
+        // 说明返回的fbound被当做new的构造函数调用
+        self.apply(
+            this instanceof fbound ? this : ctx, 
+            args.concat([...arguments])
+        )
+    }
+    var F = function () { }
+    // 考虑没有prototype属性的情况，如箭头函数
+    if (this.prototype) {
+        F.prototype = this.prototype
     }
 
-    F.prototype = this.prototype
     fbound.prototype = new F()
 
     return fbound

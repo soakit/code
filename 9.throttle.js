@@ -1,6 +1,5 @@
 var throttle = function(fn, delay) {
     var canRun = true
-    var timer
 
     return function() {
         var args = arguments
@@ -9,7 +8,7 @@ var throttle = function(fn, delay) {
             return
         }
         canRun = false
-        timer = setTimeout(function() {
+        setTimeout(function() {
             fn.apply(context, args)
             canRun = true
         }, delay || 500)
