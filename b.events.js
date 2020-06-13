@@ -43,10 +43,12 @@ function Events(){
 }
 
 const e = new Events()
-e.on('login', function(name) {
+function loginFn(name) {
     console.log(name + ' logined...')
-})
+}
+e.on('login', loginFn)
 e.emit('login', 'zhangsan')
+e.off('login', loginFn)
 e.emit('login', 'lisi')
 
 e.once('logout', function(name) {

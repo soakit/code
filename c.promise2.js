@@ -7,6 +7,8 @@ function myPromise(exec) {
     this.state = PENDING
     this.value = undefined
     this.reason = undefined
+    this.onFulfilledFn = []
+    this.onRejectedFn = []
 
     exec(resolve, reject)
 
@@ -14,6 +16,7 @@ function myPromise(exec) {
         if (_this.state === PENDING) {
             _this.state = RESOLVED
             _this.value = value;
+            _this.onFulfilledFn.forEach(fn => fn(value))
         }
     }
 
@@ -21,6 +24,7 @@ function myPromise(exec) {
         if (_this.state === PENDING) {
             _this.state = REJECTED
             _this.reason = reason;
+            _this.onRejectedFn.forEach(fn => fn(reason))
         }
     }
 }
@@ -30,6 +34,14 @@ myPromise.prototype.then = function (onFulfilled, onRejected) {
         typeof onFulfilled === 'function' && onFulfilled(this.value)
     } else if (this.state === REJECTED) {
         typeof onRejected === 'function' && onRejected(this.reason)
+    } else if (this.state === PENDING) {
+        debugger
+        this.onFulfilledFn.push(function() {
+            onFulfilled(this.value)
+        })
+        this.onRejectedFn.push(function() {
+            onRejected(this.reason)
+        })
     }
 }
 
