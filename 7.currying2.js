@@ -10,21 +10,22 @@ let sum = (a, b, c, d) => {
     return a + b + c + d
 }
 // 柯里化函数，返回一个被处理过的函数 
-function curry(func) {
-    return function curried(...args) {
-        if (args.length >= func.length) {
-            return func.apply(this, args);
-        } else {
-            return function (...args2) {
-                return curried.apply(this, args.concat(args2));
-            }
+function curry(fn) {
+    const length = fn.length;
+    
+    const curryFn = (...args) => (...args2) => {
+        const allArgs = args.concat(args2);
+        if (allArgs.length === length) {
+            return fn(...allArgs);
         }
-    };
+        return curryFn(...allArgs);
+    }
+    return curryFn;
 }
 var sumPlus = curry(sum)
-sumPlus(1)(2)(3)(4)
-sumPlus(1, 2)(3)(4)
-sumPlus(1, 2, 3)(4)
+console.log(sumPlus(1)(2)(3)(4))
+console.log(sumPlus(1, 2)(3)(4))
+console.log(sumPlus(1, 2, 3)(4))
 
 // 第二种：不固定传入参数，随时执行
 /**
