@@ -8,8 +8,6 @@ function myPromise(exec) {
     this.value = undefined
     this.reason = undefined
 
-    exec(resolve, reject)
-
     function resolve(value) {
         if (_this.state === PENDING) {
             _this.state = RESOLVED
@@ -23,6 +21,9 @@ function myPromise(exec) {
             _this.reason = reason;
         }
     }
+
+    exec(resolve, reject)
+
 }
 
 myPromise.prototype.then = function (onFulfilled, onRejected) {
