@@ -19,12 +19,7 @@ Function.prototype.myapply = function () {
     var [context, ...args] = arguments
 	var ctx = context || window
 	ctx.fn = this
-	var result
-	if (args.length) {
-		result = ctx.fn(...args)
-	} else {
-		result = ctx.fn()
-	}
+	var result = ctx.fn(...args)
 	delete ctx.fn
 	return result
 }
