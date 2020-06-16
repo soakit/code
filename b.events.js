@@ -12,11 +12,8 @@ function Events(){
     }
 
     this.once = function(type, fn) {
-        if (!this.events[type]) {
-            this.events[type] = []
-        }
+        this.on(type, fn)
         fn.__once__ = true
-        this.events[type].push(fn)
     }
 
     this.off = function(type, fn) {
