@@ -23,3 +23,13 @@ Function.prototype.myapply = function () {
 	delete ctx.fn
 	return result
 }
+
+// test
+function haha(...args){
+	console.log(this.value, args)
+}
+var obj = {
+	value: 'haha'
+}
+
+haha.myapply(obj, 'args2')
