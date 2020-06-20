@@ -14,12 +14,16 @@ function Person(name, age) {
 
 // 方式一
 Person.prototype = Object.create(Animal.prototype)
-
 // 方式二
 function F() { }
 F.prototype = Animal.prototype
 Person.prototype = new F()
-Person.prototype.constructor = Person
+
+// Person.prototype.constructor = Person; // 这种写法默认enumerable:true
+Object.defineProperty(Person.prototype, "constructor", {
+    value: Person,
+    enumerable: false
+})
 
 var a1 = new Animal('dog')
 var p1 = new Person('zhangsan', 18)
