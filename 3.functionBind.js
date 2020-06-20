@@ -5,7 +5,7 @@ Function.prototype.bind2 = function () {
     var fbound = function () {
         // this instanceof fbound === true时，
         // 说明返回的fbound被当做new的构造函数调用
-        self.apply(
+        return self.apply(
             this instanceof fbound ? this : ctx, 
             args.concat([...arguments])
         )

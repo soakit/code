@@ -32,4 +32,5 @@ var obj = {
 	value: 'haha'
 }
 
-haha.myapply(obj, 'args2')
+haha.myapply(obj, ['apply args...'])
+haha.mycall(obj, 'calll args...')
