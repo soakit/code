@@ -3,13 +3,17 @@ function Animal(name) {
 }
 
 Animal.prototype.say = function () {
-    alert(this.name)
+    console.log(this.name)
 }
 
 function Person(name, age) {
     Animal.apply(this, arguments);
     this.name = name
     this.age = age
+}
+
+Person.prototype.say = function(){
+    console.log(this.name, this.age)
 }
 
 // 方式一
@@ -27,4 +31,6 @@ Object.defineProperty(Person.prototype, "constructor", {
 
 var a1 = new Animal('dog')
 var p1 = new Person('zhangsan', 18)
+a1.say()
+p1.say()
 console.log(a1, p1)
