@@ -1,0 +1,137 @@
+NodeJS
+1.http模块
+2.断言——assert
+3.二进制——Buffer
+  File System
+4.C++ Addons
+5.多进程
+  Child Processes
+  Cluster
+  Process
+6.Crypto——签名
+  md5、sha
+7.http
+  HTTP/HTTPS
+  HTTP/2
+8.OS
+9.Path
+10.Events事件队列
+  async
+11.Query Strings
+  URL
+12.网络
+  TCP-稳定  Net
+  UDP-快    UDP/Datagram
+13.域名解析
+  DNS
+  Domain
+14.流操作——Stream
+  连续数据都是流——视频流、网络流、文件流、语音流
+15.TLS/SSL
+  加密、安全
+16.ZLIB——gz
+  压缩
+
+
+
+
+
+
+
+
+
+
+websocket原理
+
+原始数据：
+GET / HTTP/1.1
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade: websocket
+Origin: file://
+Sec-WebSocket-Version: 13
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like
+Gecko) Chrome/65.0.3315.4 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7,es;q=0.6,fr;q=0.5,pt;q=0.4
+Sec-WebSocket-Key: +0jgXtYyVeG28Gn1CLUKIg==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+--------------------------------------------------------------------------------
+
+1.第一行删掉
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade: websocket
+Origin: file://
+Sec-WebSocket-Version: 13
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like
+Gecko) Chrome/65.0.3315.4 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7,es;q=0.6,fr;q=0.5,pt;q=0.4
+Sec-WebSocket-Key: +0jgXtYyVeG28Gn1CLUKIg==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+--------------------------------------------------------------------------------
+
+2.每行数据用": "切开
+
+--------------------------------------------------------------------------------
+
+数据帧：包、报、块、...
+结构化
+
+--------------------------------------------------------------------------------
+
+1位(bit)
+8位=>1字节(byte)
+
+--------------------------------------------------------------------------------
+
+81       9c       11       2d       f8       bd         数据.....
+10000001 10011100 00010001 00101101 11111000 10111101
+
+11 2d f8 bd
+6a 0f 96 dc 7c 48 da 87 33 40 8b da 33 01 da d9 70 59 99 9f 2b 76 c9 8f 3d 18 a5 c0
+
+
+
+1 000 0001   1 0011100 00010001 00101101 11111000 10111101
+F RSV opcode M payload masking-key
+I            A 28个字
+N            S
+             K
+
+
+28
+
+--------------------------------------------------------------------------------
+
+用WebSocket：
+1.socket.io
+2.原生WebSocket
+  i.net模块
+  ii.流程
+    a.握手
+      C:version:13、sec-websocket-key:xxxxx、sha1(key+mask)=>base64
+      S:101 Switching Protocols、sec-websocket-accept: base64
+      C <-> S
+
+      Client：
+      onopen
+      onmessage
+      onclose
+
+      Server:
+      net.createServer(sock=>{});
+      sock.once('data', 握手);
+      sock.on('data', 数据请求);
+      sock.on('end');
+
+    b.数据帧解析
+
+--------------------------------------------------------------------------------
