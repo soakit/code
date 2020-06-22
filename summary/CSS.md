@@ -1,0 +1,282 @@
+# CSS
+
+## 1. 盒子模型
+
+### 1.1 content-box(标准)
+
+```css
+box-sizing: content-box;
+```
+
+块的总宽度= width + margin(左右) + padding(左右) + border(左右);
+
+### 1.2 border-box(IE/怪异)
+
+```css
+box-sizing: border-box;
+```
+
+块的总宽度= width + margin(左右)
+
+> **width已经包含了padding和border值**
+
+> 布局的块之间有间隔时常用到border-box和padding；否则用content-box时，使用calc计算;
+
+## 2. 浮动
+
+### 2.1 文字环绕
+
+最初设计的目的是文字环绕图片。
+
+### 2.2 inline-block特性
+
+不设置宽高，撑满元素自身宽高。也可设置宽高。
+
+### 2.3 脱离文档流
+
+虽然脱离的正常的文档流，但是还会占有正常文档流的空间
+
+### 2.4 破坏性
+
+使父容器的高度塌陷(父容器高度计算时会忽略float元素)
+
+> clear清除浮动
+>
+> clear属性定义了元素的哪边上不允许出现浮动元素。在 CSS1 和 CSS2 中,这是通过自动为清除元素(即设置了 clear属性的元素)增加上外边距实现的。
+
+```css
+.clearfix:before,
+.clearfix:after {
+  /* 解决子元素垂直方向的边距折叠 */
+  display: table;
+  content: " ";
+}
+.clearfix:after {
+  /*清楚浮动*/
+  clear: both;
+}
+.clearfix{zoom:1;} //ie 6 7
+```
+
+参考链接：[深入解析 float](https://segmentfault.com/a/1190000006041960)
+
+## 3. 布局
+
+### 3.1 布局相关的单位
+
+#### 3.1.1 vw与vh
+
+| 单位  | 含义                                                         |
+| ----- | ------------------------------------------------------------ |
+| %     | 大部分相对于祖先元素，也有相对于自身的情况比如（border-radius、translate等) |
+| vw/vh | 相对于视窗的尺寸                                             |
+
+#### 3.1.2 rem
+
+rem是相对于html根元素。布局过程如下：
+
+1. 设置设计稿宽度为750(一般是基于iphone6的**750*1334**);
+
+2. 设置rem基准值(html标签的fontSize);
+
+   方式一：fontSize为100px，标注的设计稿好计算(除以100，即小数点前移两位);
+
+   方式二：fontSize为75px(视觉稿分成**`100份`**，主要为了以后能更好的兼容`vh`和`vw`），使用插件进行自动计算;
+
+   
+
+   参考链接：[使用Flexible实现手淘H5页面的终端适配](https://github.com/amfe/article/issues/17#)
+
+### 3.2 布局技术
+
+- table
+  - web诞生之初的布局技术，兼容性贼棒。
+- inline-block
+  - 通过css hack，兼容性棒。
+- float
+  - 本来是用作图片文字环绕的，得处理浮动父元素高度塌陷(BFC或清除浮动)。
+- 定位
+  - 定位即确定位置，也可用于布局。
+- flex
+  - 一维的布局技术，兼容IE10+、移动端兼容贼棒。移动端布局的首选！
+- grid
+  - 二维的布局技术，兼容IE10+、IOS10.3+、Android4.4.5+。
+
+### 3.3 常见布局
+
+#### 3.3.2 左中右布局
+
+- [左中右布局之float1](https://codepen.io/soakit/pen/NWPgaza)
+- [左中右布局之float2](https://codepen.io/soakit/pen/YzPQrEP)
+
+- [左中右布局之absolute](https://codepen.io/soakit/pen/mdywMNb)
+- [左中右布局之flex](https://codepen.io/soakit/pen/jOEwLRy)
+
+#### 3.3.3 两栏布局
+
+#### 3.3.4 居中处理
+
+### 3.4 vertical-align
+
+`vertical-align`属性值：
+
+- 线类：`baseline`、`top`、`middle`、`bottom`
+- 文本类：`text-top`、`text-bottom`
+- 上标下标类：`sub`、`super`
+- 数值百分比类：20px、2em、20%等（对于基线往上或往下偏移）
+
+> **温馨提示**：负值相对于基线往下偏移，正值往上偏移，事实上`vertical-align:base-line`等同于`vertical-align:0`。
+
+`vertical-align`生效前提：
+
+- 内联元素`span`、`strong`、`em`、`img`、`button`、`input`等。
+- `display`值为`inline`、`inline-block`、`inline-table`或`table-cell`的元素。
+- 需要注意浮动和绝对定位会让元素块状化，因此此元素绝对不会生效。
+
+## 4. CSS选择器
+
+### 4.1 优先级
+
+### 4.2 伪类选择器
+
+[:nth-child伪类选择器测试](https://css-tricks.com/examples/nth-child-tester/)
+
+## 5. BFC及应用
+
+### 5.1 触发BFC的条件
+
+- 根元素或其它包含它的元素
+- 浮动元素 (元素的 `float` 不是 `none`)
+- 绝对定位元素 (元素具有 `position` 为 `absolute` 或 `fixed`)
+- 内联块 (元素具有 `display: inline-block`)
+- 表格单元格 (元素具有 `display: table-cell`，HTML表格单元格默认属性)
+- 表格标题 (元素具有 `display: table-caption`, HTML表格标题默认属性)
+- 具有`overflow` 且值不是 `visible` 的块元素
+- 弹性盒（`flex`或`inline-flex`）
+- `display: flow-root`
+- `column-span: all`
+
+### 5.2 BFC的约束规则
+
+- 内部的盒会在垂直方向一个接一个排列（可以看作BFC中有一个的常规流）
+- 处于同一个BFC中的元素相互影响，可能会发生外边距重叠
+- 每个元素的margin box的左边，与容器块border box的左边相接触(对于从左往右的格式化，否则相反)，即使存在浮动也是如此
+- BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素，反之亦然
+- 计算BFC的高度时，考虑BFC所包含的所有元素，连浮动元素也参与计算
+- 浮动盒区域不叠加到BFC上
+
+### 5.3 BFC可以解决的问题
+
+- 垂直外边距重叠问题
+- 去除浮动
+- 自适用两列布局（`float` + `overflow`）
+
+
+参考链接：https://juejin.im/post/5d690c726fb9a06b155dd40d
+
+## 6. 图标
+
+### 6.1 字体图标
+
+iconfont/icomoon
+
+### 6.2 box-shadow图标
+
+> www.one-div.com 网站已挂
+
+https://a.singlediv.com/
+
+## 7. 书籍
+
+- CSS权威指南
+- 精通CSS高级Web标准解决方案
+- CSS揭秘
+- CSS世界
+
+## 8. CSS工具
+
+[生成三角形](http://apps.eky.hk/css-triangle-generator/zh-hant)
+
+[生成梯形等形状](https://coveloping.com/tools/css-shapes-generator)
+
+[生成渐变](https://www.colorzilla.com/gradient-editor/)
+
+[动画站](https://daneden.github.io/animate.css/)
+
+[autoprefixed css](https://autoprefixer.github.io/)
+
+## 9. 重排和重绘
+
+在浏览器的渲染过程中，浏览器会在下载完页面所有组件之后，解析并生成两个数据结构：
+
+- DOM Tree（DOM树）
+- Render Tree（渲染树）
+
+一旦上述两种结构构建完成，浏览器就开始绘制(paint)页面元素。
+
+> 注：对重排和重绘的理解是非常必要的
+
+### 9.1 重排 Reflow
+
+- 定义：当DOM结构的变化影响了元素的**几何属性**，浏览器需要根据样式来重新计算元素出现的位置。浏览器会使渲染树中受到影响的部分失效，并重新构造渲染树。
+
+- 触发Reflow的条件：
+  - 添加或删除可见的DOM元素
+  - 元素位置改变：如，添加动画效果
+  - 元素尺寸改变：如，改变边框宽高、内外边距等
+  - 内容改变：如，改变段落文字行数、图片替换等
+  - 浏览器Resize窗口(移动端不会出现)
+  - 修改默认字体
+  - 页面渲染器初始化
+
+  特别的：当滚动条出现时，会触发整个页面的重排
+
+### 9.2 重绘 Repaint
+
+- 定义：完成重排后，浏览器会根据渲染树重新绘制受影响的部分到屏幕中。
+
+> 不是所有的DOM变化都会影响几何属性，例如改变一个元素的背景色只会发生一次重绘。
+>
+> 特别的，要注意分析改变所影响的阶段是重排还是重绘。
+
+### 9.3 小结
+
+重排和重绘都是昂贵的操作，会导致Web应用反应迟钝。所以，应该尽可能**减少**这类过程的发生。
+
+渲染树的变化的排队和刷新，浏览器会通过队列化批量执行来优化重排过程。
+
+以下获取布局的操作会导致队列刷新：
+
+- offsetTop、offsetLeft、offsetWidth、offsetHeight
+- scrollTop、scrollLeft、scrollWidth、scrollHeight
+- clientTop、clientLeft、clientWidth、clientHeight
+- getComputedStyle()
+
+修改样式时，应避免以上属性。
+
+策略：不要在布局信息改变时操作它。
+
+### 9.4 最小化重排和重绘
+
+- 策略：
+  - 合并多次对DOM和样式的修改，然后一次处理掉。(n -> 1)，如：cssText属性，className属性等。
+  - 尽量减少offsets等布局信息的获取次数，方法是获取一次起始位置的值，在动画循环中，直接使用变量。
+  - 让元素脱离动画流：拖放代理
+    - 使用绝对定位页面上的动画元素，将其脱离文档流。
+    - 让元素动起来，这时会临时覆盖部分页面，只会发生小规模重绘。
+    - 当动画结束时恢复定位，从而只会下移一次文档的其他元素。
+  - 在元素很多时，避免使用:hover
+
+- 批量修改DOM
+  - 关键：“离线”操作DOM树，使用缓存，减少访问布局信息的次数。 
+
+  - 策略
+
+    - 使元素脱离文档流
+      - 隐藏元素(display:none)，应用修改，重新显示。
+      - 使用文档片段在当前DOM之外构建一个子树(document.createDocumentFragment())，再把它拷贝回文档。(推荐)
+      - 将原始元素拷贝到一个脱离文档流的节点中，**修改副本**，完成后再替换原始元素。
+
+    - 对其应用多重改变
+
+    - 把元素带回文档中

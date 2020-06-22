@@ -1,0 +1,566 @@
+# 1. promise
+
+```js
+const PENDING = 'pending'
+const RESOLVED = 'resolved'
+const REJECTED = 'rejected'
+function myPromise(exec) {
+    this.state = PENDING
+    this.value = undefined
+    this.reason = undefined
+    try {
+        exec(value => {
+            if (this.state === PENDING) {
+                this.state = RESOLVED
+                this.value = value
+            }
+        }, reason => {
+            if (this.state === PENDING) {
+                this.state = REJECTED
+                this.reason = reason
+            }
+        })
+    } catch (err) {
+        reject(err);
+    }
+}
+myPromise.prototype.then = function(onFullFilled, onRejected){
+    if (this.state === RESOLVED) {
+        typeof onFullFilled === 'function' && onFullFilled(this.value)
+    } else if (this.state === REJECTED) {
+        typeof onRejected === 'function' && onRejected(this.reason)
+    }
+}
+myPromise.prototype.catch = function(){
+    // TODO:
+} 
+myPromise.resolve = function(data) {
+    if (data instanceof myPromise) {
+        return data;
+    }
+    return new myPromise(resolve => {
+        resolve(data);
+    })
+}
+
+myPromise.reject = function(reason) {
+    return new myPromise((resolve, reject) => {
+        reject(reason);
+    })
+}
+myPromise.all = function(promises) {
+    if (!isArray(promises)) {
+        throw new Error("promises must be an array")
+    }
+	return new myPromise(function (resolve, reject) {
+        let promsieNum = promises.length;
+        let resolvedCount = 0;
+        let resolveValues = new Array(promsieNum);
+        for (let i = 0; i < promsieNum; i++) {
+            myPromise.resolve(promises[i].then(function (value) {
+                resolveValues[i] = value;
+                resolvedCount++;
+                if (resolvedCount === promsieNum) {
+                    return resolve(resolveValues)
+                }
+            }, function (reason) {
+                return reject(reason);
+            }))
+        }
+    })
+}
+myPromise.race = (promises) {
+    if (!isArray(promises)) {
+        throw new Error("promises must be an array")
+    }
+    return new myPromise(function (resolve, reject) {
+        promises.forEach(
+            p => myPromise.resolve(p).then(
+                data => {
+                    resolve(data)
+                }, err => {
+                    reject(err)
+                })
+        )
+    })
+}
+// test
+new myPromise(function (resolve, reject) {
+    if (Math.random() > 0.5) {
+        resolve('resolved...')
+    } else {
+        reject('rejected...')
+    }
+}).then(function (value) {
+    console.log(value)
+}, function (reason) {
+    console.log(reason)
+})
+```
+
+参考链接: https://blog.csdn.net/weixin_42755677/article/details/92384782
+
+https://blog.csdn.net/qq_40619263/article/details/106138916
+
+https://www.jianshu.com/p/1eea8ce8c7a5
+
+# 2. 改变this
+
+## 2.1 实现bind
+
+```js
+Function.prototype.myBind = function(){
+    const [ctx, ...args] = arguments
+    const self = this
+    const fbound = function (...args2){
+        return self.apply(
+            // this instanceof fbound === true时，
+            // 说明返回的fbound被当做new的构造函数调用
+            this instanceof fbound ? this : ctx,
+            args.concat(args2)
+        )
+    }
+    var F = function(){}
+    // 考虑没有prototype属性的情况，如箭头函数
+    if (this.prototype) {
+        F.prototype = this.prototype
+    }
+    fbound.prototype = new F()
+    return fbound
+}
+// test
+var obj = {
+    title: 'title',
+    getTitle() {
+        console.log(this.title, ...arguments)
+        return this.title
+    }
+}
+var getDocTitle = obj.getTitle.myBind(document, 'hehe')
+getDocTitle('hahaha')
+```
+
+## 2.2 实现call/apply
+
+```js
+Function.prototype.myCall = Function.prototype.myApply = function() {
+    if (typeof this !== 'function') {
+        throw new TypeError('not funciton')
+    }
+	let [ctx, ...args] = arguments
+    ctx = ctx || window
+    ctx.fn = this
+    var result = ctx.fn(...args)
+    delete ctx.fn;
+    return result
+}
+// test
+function haha(...args){
+	console.log(this.value, args)
+}
+var obj = {
+	value: 'haha'
+}
+
+haha.myCall(obj, ['apply args...'])
+haha.myApply(obj, 'calll args...')
+```
+
+# 3. 实现eventEmitter
+
+```js
+function Events(){
+    this.events = {}
+    this.on = function(type, fn) {
+        if (!this.events[type]) {
+            this.events[type] = []
+        }
+        this.events[type].push(fn)
+    }
+    this.once = function(type, fn) {
+        this.on(type, fn)
+        fn.__once__ = true
+    }
+    this.off = function(type, fn) {
+        if (!this.events[type]) {
+	    	return
+        }
+        var fns = this.events[type]
+        var index = fns.findIndex(item => item === fn)
+        index > -1 && fns.splice(index, 1);
+    }
+    this.emit = function(type, ...args) {
+        if (!this.events[type]) {
+	    	return
+        }
+        var fns = this.events[type]
+        fns.forEach(fn => {
+            fn.apply(this, args)
+            if (fn.__once__) {
+                this.off(type, fn)
+            }
+        })
+    }
+}
+// test
+const e = new Events()
+function loginFn(name) {
+    console.log(name + ' logined...')
+}
+e.on('login', loginFn)
+e.emit('login', 'zhangsan')
+e.off('login', loginFn)
+e.emit('login', 'lisi')
+
+e.once('logout', function(name) {
+    console.log(name + ' logout...')
+})
+e.emit('logout', 'zhangsan')
+e.emit('logout', 'lisi')
+```
+
+# 4. 继承相关
+
+## 4.1 实现instance of
+
+```js
+function myInstaceOf(instance, Obj) {
+  // 基本数据类型直接返回false
+  if (typeof instance !== 'object' || instance === null) return false;
+  if (typeof Obj !== 'function') {
+      throw new Error('Obj应该是一个Function')
+      return
+  }
+  while (instance) {
+    // 方式一
+    // var instancePrototype = instance.__proto__
+    // 方式二、getProtypeOf是Object对象自带的一个方法，能够拿到参数的原型对象
+    let instancePrototype = Object.getPrototypeOf(instance);
+    var ObjPrototype = Obj.prototype
+    if (!instancePrototype) {
+      return false
+    }
+    if (instancePrototype === ObjPrototype) {
+      return true
+    }
+    instance = instancePrototype
+  }
+}
+
+// 测试
+var Person = function() {}
+var p1 = new Person()
+console.log(myInstaceOf(p1, Person)) // true
+
+var str1 = 'hello world'
+console.log(myInstaceOf(str1, String)) // false
+
+var str2 = new String('hello world')
+console.log(myInstaceOf(str2, String)) //true
+```
+
+## 4.2 实现new
+
+```js
+/**
+ * 实现:new
+ * objectFactory(Person, 'zhangsan', 24)
+ * 1.创建一个空对象obj
+ * 2.设置obj的原型链(对象的__proto__)指向构造函数的prototype
+ * 3.将构造函数的this指向obj，并执行(Person.apply(obj))
+ * 4.判断执行的返回值类型，是对象则返回，否则返回obj
+ * (js中的构造函数，是不需要有返回值的，所以默认返回的是新创建的空对象obj)
+ */
+var objectFactory = function() {
+    const [Ctor, ...args] = arguments
+    const obj = {}
+    obj.__proto__ = Ctor.prototype
+    var ret = Ctor.apply(obj, args)
+    return typeof ret === 'object' ? ret : obj
+}
+
+// test
+function Person(name, age) {
+    this.name = name
+    this.age = age
+}
+var p = objectFactory(Person, 'zhangsan', 24)
+var p2 = new Person('lisi', 30)
+
+console.log(p, p2)
+```
+
+## 4.3 实现Object.create
+
+```js
+Object.create = Object.create || function(proto, properties) {
+    function F(){}
+    F.prototype = proto
+    if (properties) {
+        Object.defineProperties(F, properties)
+    }
+    return new F()
+}
+```
+
+## 4.4 继承实现
+
+```js
+function Animal(name) {
+    this.name = name
+}
+Animal.prototype.sleep = function () {
+    console.log(this.name + ' is sleeping...')
+}
+function Person(name, age) {
+    Animal.apply(this, arguments)
+    this.name = name
+    this.age = age
+}
+Person.prototype = Object.create(Animal.prototype)
+Person.prototype.constructor = Person
+Person.prototype.say = function(){
+    console.log(this.name, this.age)
+}
+// test
+var a1 = new Animal('dog')
+var p1 = new Person('zhangsan', 18)
+a1.sleep()
+p1.sleep()
+p1.say()
+```
+
+# 5. 其他
+
+## 5.1 debounce
+
+```js
+function debounce(fn, delay) {
+    let timer = null
+    return function(...args) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            fn.apply(this, args)
+        }, delay)
+    }
+}
+```
+
+## 5.2 throttle
+
+```js
+function throttle(fn, delay) {
+    let canRun = true
+    return function(...args) {
+        if (!canRun) {
+            return
+        }
+        canRun = false
+        setTimeout(() => {
+            fn.apply(this, args)
+            canRun = true
+        }, delay)
+    }
+}
+```
+
+## 5.3 currying
+
+```js
+function curry(fn) {
+    const length = fn.length
+    const curryFn = (...args1) => (...args2) => {
+        const allArgs = args1.concat(args2)
+        if (length === allArgs.length) {
+            return fn(...allArgs)
+        }
+        return curryFn(...allArgs)
+    }
+    return curryFn
+}
+```
+
+## 5.4 深拷贝
+
+## 5.5 路由实现
+
+## 5.6 双向数据绑定实现
+
+## 5.7 ajax实现
+
+```js
+// 1. 简单流程
+// 实例化
+let xhr = new XMLHttpRequest()
+// 初始化
+xhr.open(method, url, async)
+// 发送请求
+xhr.send(data)
+// 设置状态变化回调处理请求结果
+xhr.onreadystatechange = () => {
+  if (xhr.readyStatus === 4 && xhr.status === 200) {
+    console.log(xhr.responseText)
+  }
+}
+
+// 2. 基于promise实现
+function ajax (options) {
+  // 请求地址
+  const url = options.url
+  // 请求方法
+  const method = options.method.toLocaleLowerCase() || 'get'
+  // 默认为异步true
+  const async = options.async
+  // 请求参数
+  const data = options.data
+  // 实例化
+  const xhr = new XMLHttpRequest()
+  // 请求超时
+  if (options.timeout && options.timeout > 0) {
+    xhr.timeout = options.timeout
+  }
+  // 返回一个Promise实例
+  return new Promise ((resolve, reject) => {
+    xhr.ontimeout = () => reject && reject('请求超时')
+    // 监听状态变化回调
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == 4) {
+        // 200-300 之间表示请求成功，304资源未变，取缓存
+        if (xhr.status >= 200 && xhr.status < 300 || xhr.status == 304) {
+          resolve && resolve(xhr.responseText)
+        } else {
+          reject && reject()
+        }
+      }
+    }
+    // 错误回调
+    xhr.onerror = err => reject && reject(err)
+    let paramArr = []
+    let encodeData
+    // 处理请求参数
+    if (data instanceof Object) {
+      for (let key in data) {
+        // 参数拼接需要通过 encodeURIComponent 进行编码
+        paramArr.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+      }
+      encodeData = paramArr.join('&')
+    }
+    // get请求拼接参数
+    if (method === 'get') {
+      // 检测url中是否已存在 ? 及其位置
+      const index = url.indexOf('?')
+      if (index === -1) url += '?'
+      else if (index !== url.length -1) url += '&'
+      // 拼接url
+      url += encodeData
+    }
+    // 初始化
+    xhr.open(method, url, async)
+    // 发送请求
+    if (method === 'get') xhr.send(null)
+    else {
+      // post 方式需要设置请求头
+      xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=UTF-8')
+      xhr.send(encodeData)
+    }
+  })
+}
+```
+
+# 6. 正则操作
+
+## 6.1 实现{{}}模板
+
+```js
+var html = "I'm {{ name }}, {{age}} years old."
+var obj = {
+    name: 'zhangsan',
+    age: 18
+}
+// \s*匹配一个或多个空格
+var newHtml = html.replace(
+    	/\{\{\s*(\w+)\s*\}\}/g, 
+        /**
+		 * @param {*} matchStr 正则匹配的内容
+		 * @param {*} matchMain 用括号括起来的正则匹配内容，如果有
+		 * @param {*} matchStrIndex 正则匹配的内容起始位置
+		 * @param {*} str 原字符串
+		 */
+    	function(matchStr, matchMain, matchStrIndex, str) { return obj[key] }
+	); 
+console.log(newHtml); // "I'm zhangsan, 18 years old."
+// html.match(/(?<=\{\{\s*)\w+(?=\s*\}\})/g) // ["name", "age"]
+```
+
+# 7. 字符串操作
+
+## 7.1 实现String的indexOf
+
+```js
+// 方式一、substr截取
+String.prototype.myIndexOf = function(str){
+    if (str === null || str === undefined) {
+        return -1
+    }
+    var strLen = str.length, 
+        thisLen = this.length,
+        res = -1;
+    for (var i=0; i<= thisLen - strLen; i++) {
+        // 截取str长度的字符
+        if (this.substr(i, strLen) === str) {
+            res = i;
+            break;
+        }
+    }
+    return res
+}
+// 方式二、正则
+String.prototype.myIndexOf2 = function(str) {
+    var reg = new RegExp(str),
+        res = reg.exec(this);
+    return res === null ? -1 : res.index;
+}
+```
+
+## 7.2 字符串大小写转换
+
+```js
+var str = 'dfsKJFS23'
+str = str.replace(/[a-zA-Z]/g, function(content) {
+    // 方式一、大小写api
+    // 方式二、ASCII码
+	// content.charCodeAt() >= 65 && content.charCodeAt() <= 90 // A-Z
+    return content.toUpperCase() === content ? content.toLowerCase() : content.toUpperCase()
+})
+```
+
+# 8. 数组操作
+
+## 8.1 数组反转
+
+```js
+Array.prototype.rotate2 = function(k) {
+    // 负数，0，自身一样长度就返回自己
+    if (k <=0 || k === this.length) {
+        return this
+    }
+    if (k > this.length) {
+        k = k % this.length;
+    }
+    
+    // 方式一、slice
+    // return this.slice(-k).concat(this.slice(0, this.length - k))
+    // 方式二、splice
+    // return [...this.splice(this.length - k), ...this]
+    // 方式三、unshift/pop
+    for (var i=0; i<k; i++) {
+        this.unshift(this.pop())
+    }
+    return this
+}
+// test
+[1,2,3,4,5,6,7].rotate(3)
+```
+
+
+

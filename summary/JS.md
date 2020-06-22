@@ -1,0 +1,267 @@
+# js
+
+## 1. event loop
+
+JS 执行是单线程的，它是基于事件循环的。事件循环大致分为以下几个步骤：
+
+（1）所有同步任务都在主线程上执行，形成一个执行栈。
+
+（2）主线程之外，还存在一个"任务队列"。只要异步任务有了运行结果，就在"任务队列"之中放置一个事件。
+
+（3）一旦"执行栈"中的所有同步任务执行完毕，系统就会读取"任务队列"，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。
+
+（4）主线程不断重复上面的第三步。
+
+## 2. 原生js的内容
+
+### 2.1 JavaScript 实现包含的部分
+
+#### 2.1.1 数组push方法的原理
+
+- 首先length属性+1
+- 然后在当前对象的`length+1`属性上push值
+
+### 2.2 JavaScript 的语言类型特性
+
+#### 2.2.1 原型与原型链
+
+- `对象实例`的`__proto__`指向`对象的prototype`。 
+
+- `对象prototype`的`__proto__`属性指向其`父类的prototype`。最顶层的类为Object，而`Object.prototype.__proto__`为`null`。
+
+- `对象prototype`的`constructor`指向`对象自身`。
+
+  ```js
+  var obj = {} // new Object()
+  function Fn() {} // new Function(...)
+  obj.__proto__ === Object.prototype // obj为Object的实例
+  Fn.__proto__ === Function.prototype // Fn为Function的实例
+  Fn.prototype.__proto__ === Object.prototype // 原型链上找，直到Object
+  Object.prototype.__proto__ === null
+  Fn.prototype.constructor === Fn
+  ```
+
+#### 2.2.2 闭包
+
+- 闭包：
+  - 密闭的容器，类似于set, map，用于存储数据。
+  - 存储数据的格式是key: value。
+- 形成方式：
+  - 函数嵌套
+  - 内部函数引用外部函数的局部变量
+- 优缺点：
+  - 优点是延长外部函数局部变量的生命周期，缺点是易引用内存泄露。
+
+### 2.3 解释性脚本语言
+
+### 2.4 面向对象（面向过程）
+
+### 2.5 事件驱动 / 异步 IO
+
+### 2.6 自由
+
+## 3. 高性能javascript
+
+- for循环使用`--`替代`++`
+
+  > 很多cpu和0比较可以减少1个指令.
+  > i–操作本身会影响CPSR(当前程序状态寄存器)，CPSR常见的标志有N(结果为负), Z(结果为0)，C（有进位），O（有溢出）。i > 0，可以直接通过Z标志判断出来。
+  >
+  > i++操作也会影响CPSR(当前程序状态寄存器)，但只影响O（有溢出）标志，这对于i < n的判断没有任何帮助。所以还需要一条额外的比较指令，也就是说每个循环要多执行一条指令。
+  > 原文链接：https://blog.csdn.net/hyqsong/java/article/details/49632795
+
+- 多次访问变量时，使用局部变量缓存。
+
+- 减少访问DOM的次数，把运算留给ECMAScript一端。
+
+- 节点克隆`element.cloneNode()`比创建新元素`document.createElement`更有效率。
+
+- 事件委托
+
+  每绑定一个事件处理器都会加重页面负担、延长执行时间、消耗更多的内存（因为浏览器会跟踪每个事件处理器），一个优雅的策略就是利用**事件委托**。
+
+- 迭代数超过1000，使用 Duff's Device 的执行效率将明显提升。
+
+  ```js
+  // duff's device
+  function useDuffDevice(aTest) {
+      var len = aTest.length, j = len % 8;
+      while (j) { // 处理余数位
+          process(aTest[len - (j--)]);
+      }
+  
+      j = Math.floor(len / 8);
+      while (j) { // 处理整除位
+          var k = j * 8 - 1;
+          process(aTest[k--]);
+          process(aTest[k--]);
+          process(aTest[k--]);
+          process(aTest[k--]);
+          process(aTest[k--]);
+          process(aTest[k--]);
+          process(aTest[k--]);
+          process(aTest[k--]);
+          j--;
+      }
+  }
+  // 测试代码
+  var aTest = [];
+  for (var i = 0; i < 10; i++) {
+      aTest[i] = i;
+  }
+  function process(val) {
+      console.log(val)
+  }
+  useDuffDevice(aTest)
+  ```
+
+- **if-else **对比 **switch** 基于测试条件的数量选择：条件数量越大，越倾向于使用switch，易读性强且速度快。
+
+  > 大多数语言对 switch 语句的实现都采用了 branch table（分支表）索引进行优化。
+
+- **优化 if-else**
+
+  1. 最小化到达正确分支前所需条件判断的次数 策略：条件语句按照从大概率到小概率的顺序排列
+  2. 把 if-else 组织成一系列**嵌套**的if-else 语句 策略：二分法把值域分成一系列区间，逐步缩小范围。 适用范围：有多个值域需要测试。 **查找表** 当条件语句数量很大或有大量散离值需要测试时，使用**数组**和**普通对象**构建查找表访问数据比较快。
+
+  > 优点：当单个键和单个值之间存在逻辑映射时，随着候选值增加，几乎不产生额外开销。
+
+- 递归
+
+  传统算法的递归实现：阶层函数 潜在问题;
+
+  1. 假死 策略：为了安全在浏览器工作，可以迭代和Memoization结合使用。
+  2. 浏览器调用栈大小限制 Call stack size limites 当超过最大调用栈容量时，浏览器会报错，可以用try-catch定位。 策略：ES6中使用**尾递归**就不会发生栈溢出，相对节省性能。
+
+- 字符串连接优化
+
+  2个以上的字符串拼接，会在内存中产生临时字符串。推荐，直接附加内容给str(+=)，提速10%~40%。
+
+  > 浏览器合并字符串时分配的方法：除IE外，为表达式左侧的字符串分配更多的内存，然后简单地将第二个字符串拷贝至它的末尾。
+
+- 正则表达式优化
+
+  策略：
+
+  1. **具体化**分隔符之间的字符串匹配模式
+  2. 使用预查和反向引用的模拟原子组
+  3. 避免嵌套量词与回溯失控
+  4. 关注如何让匹配更快失败
+  5. 以简单必需的字元开始
+  6. 使用量词模式，使它们后面的字元互斥
+  7. 较少分支数量，缩小分支范围
+  8. 把正则表达式赋值给变量并重用
+  9. 化繁为简
+
+  何时不使用正则表达式
+
+  1. 在特定位置上提取并检查字符串的值：slice、substr、substring
+  2. 查找特定字符串位置，或者判断它们是否存在：indexOf、lastIndexOf
+
+- 快速响应的用户界面
+
+  Web Workers 引入了一个接口，能使代码运行且不占用浏览器线程的时间。
+
+  Worker的运行环境：
+
+  - 一个 navigator 对象，只包括四个属性：appName、appVersion、user Agent 和 platform
+  - 一个 location 对象（与window.location 相同，不过所有属性都是只读的）
+  - 一个 importScripts() 方法，用来加载 Worker 所用到的外部 JavaScript 文件
+  - 所有的 ECMAScript 对象
+  - XMLHTTPRequest 构造器
+  - setTimeout() 和 setInterval() 方法
+  - 一个 close() 方法，可以立即停止 Worker 运行。
+
+  Web Workers 实际应用
+
+  Web Workers 适用于：
+
+  1. 处理**纯数据**
+  2. 与浏览器无关的长时间运行脚本
+  3. 编码/解码大字符串
+  4. 复杂数学运算，如：图像和视频
+  5. 大数组排序
+
+  例子：解析一个很大的JSON字符串
+
+  ```js
+  var worker = new Worker("jsonParser.js");
+  //数据就位时，调用事件处理器
+  worker.onmessage = function (event) {    
+    var jsonData = event.data;      // JSON结构被回传回来    
+    evaluateData(jsonData);  // 使用JSON结构 
+  };
+  worker.postMessage(jsonText);// 传入要解析的大段JSON字符串
+  ```
+
+  jsonParser.js文件中 Worker 中负责解析JSON的代码：
+
+  ```js
+  //当JSON数据存在时，该事件处理器会被调用
+  self.onmessage = function (event) {    
+    var jsonText = event.data;      // JSON字符串由event.data传入    
+    var jsonData = JSON.parse(jsonText);      // 解析    
+    self.postMessage(jsonData);  // 回传结果    
+  }
+  ```
+
+  > 超过100毫秒的处理过程，应该考虑 Worker 方案。
+
+## 4. ES6内容
+
+### 4.1 箭头函数
+
+- 内部this对象指向创建时的上下文对象
+- 不能作为构造函数、生成器函数
+- 没有arguments
+
+## 5. 正则
+
+### 5.1 正向预查和负向预查
+
+- 正向预查(只起到判断左右)
+  - keyword(?:pattern) - 只匹配满足条件的keyword和pattern
+  
+  - keyword(?=pattern) - 只匹配满足pattern条件的keyword,不包括pattern,pattern只起到判断作用
+  
+  - keyword(?!pattern) - 只匹配不满足pattern条件的keyword,不包括pattern,pattern只起到判断作用
+  
+    ```js
+    // 6~16位的字符串，必须同时包含大小写字母和数字
+    var reg = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?![0-9A-Z]+$)(?![a-zA-Z]+$)(?![0-9a-z]+$)[0-9a-zA-Z]{6,}$/;
+    // (?![0-9]+$) 表示后面不能为纯数字，判断
+    // (?![a-z]+$) 表示后面不能为纯小写字母，判断
+    // (?![A-Z]+$) 表示后面不能为纯大写字母，判断
+    // (?![0-9A-Z]+$)(?![a-zA-Z]+$)(?![0-9a-z]+$) 表示后面不能为两两组合，判断
+    // [0-9a-zA-Z]{6,16} 6~16位的大小写字母和数字
+    ```
+- 负向预查 (从右向左匹配)
+  - (? <= pattern) keyword  只匹配满足pattern条件的keyword,不包括pattern,pattern只起到判断作用
+  - (? <! pattern) keyword  只匹配不满足pattern条件的keyword,不包括pattern,pattern只起到判断作用
+
+参考链接：https://blog.csdn.net/qq_30638831/article/details/100189325
+
+### 5.2 正则网站
+
+https://jex.im/regulex
+
+https://regexr.com/
+
+### 5.3 常用正则
+
+```js
+/*
+ * 网址匹配
+ * 1.协议：(?:(http|https|ftp):\/\/)?
+ * 2.域名：((?:[\w-]+\.)+[a-z0-9]+)
+ * 3.请求路径：((?:\/[^/?#]*)+)?
+ * 4.问号参数：(\?[^#]+)?
+ * 5.哈希值：(#.+)?
+*/
+// 网址匹配
+/^(?:(http|https|ftp):\/\/)?((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
+
+/\bbox\b/.test('con box') // true
+/\bbox\b/.test('conbox') // false
+```
+

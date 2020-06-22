@@ -1,0 +1,329 @@
+# https
+
+## 1. https背景
+
+### 1.1 面临的安全问题
+
+- 隐私泄露
+  - 登录态窃取
+  - 骚扰电话
+- 内容劫持
+  - 广告
+  - 不良内容
+  - AP劫持
+
+### 1.2 大厂推动
+
+- iOS
+  - 2017.1.1强制使用https，虽推迟，但是趋势。
+- Chrome
+  - 标记http为不安全。
+
+## 2. https概念
+
+- https <==> http over TLS
+- SSL经过IETF讨论后命名为TLS
+- SSL(secure socket layer) <==> TLS(transport layer security)
+
+| 协议    | 分层模型 |
+| ------- | -------- |
+| HTTP    | 应用层   |
+| TLS/SSL | 会话层   |
+| TCP/UDP | 传输层   |
+
+### 2.1 TLS协议组成及格式
+
+TLS/SSL:
+
+- protocol组成
+  - Application
+  - HandShake
+  - Alert
+  - ChangeCipherSpec
+  - Heartbeat
+- record格式
+  - ContentType
+  - Version
+  - Length
+  - ProtocolMessage
+  - MAC(可选)
+  - Padding(cbc)
+
+### 2.2 HandShake 握手
+
+http 只需tcp握手
+
+https 握手
+
+- TLS完全握手
+
+- TLS1.2 简化握手
+- TLS1.3 0 RTT握手
+
+## 3. 三大功能
+
+- 身份认证——防冒充
+  - 确保正确的用户访问到正确的网站
+- 数据加密——防窃听
+  - 第三方无法直接查看原始内容
+- 数据一致性——防篡改，防抵赖
+  - 及时发现第三方对内容的篡改
+
+### 3.1 身份认证
+
+### 3.2 身份认证的几个问题
+
+#### 3.2.1 12306几年前被标记为不安全
+
+12306旗下自行颁发的，不被windows, 安卓等系统信任的机构。因此需要安装12306的证书并设置为可信任机构。安装了还是标记不安全，12306用的SHA1，不安全，需要用SHA2。
+
+#### 3.2.2 Mozilla停止信任WoSign和StartCom
+
+WoSign、StartCom冒充厂商签名
+
+> CA的权力相当大，技术上可以冒充任何公司的签名
+
+### 3.3 数据加密
+
+- 对称加密
+
+  明文用密钥加密成密文，密文用密钥解密成明文。
+
+  - 流式加密
+    - Rc4, chacha20-poly1305
+  - 块式加密
+    - AES, DES
+
+- 非对称加密(公钥加密)
+
+  明文用公钥加密成密文，密文用私钥解密成明文。
+
+  - RSA, DHE
+
+### 3.4 内容一致性校验
+
+- 单向哈希
+  - md5, sha1, sha2
+- MAC(消息认证码)
+  - 哈希+共享密码
+
+## 4. 流量劫持及防御
+
+### 4.1 劫持分类
+
+- 劫持路径
+  - 客户端劫持
+    - 插件、木马
+  - 链路劫持
+  - 服务端劫持
+  - 流量拦截，请求无法到达服务器
+    - 防火墙
+- 劫持内容
+  - DNS劫持
+  - 页面内容篡改
+    - http会话劫持，页面注入iframe/js, 302跳转
+  - URL篡改
+    - 渠道来源修改
+
+### 4.2 劫持者
+
+- ISP及流量广告公司
+- 宾馆、办公楼
+  - 路由器
+- 公式WIFI
+  - AP劫持
+
+### 4.3 防御
+
+- web端监控页面内容
+  - 事后上报，统计
+- 实时检测，被篡改则丢弃，使用https重新请求
+
+## 5. https使用
+
+### 5.1 使用问题
+
+- 慢
+  - 移动端慢500ms以上
+- 贵
+  - 增加服务器成本
+    - 不到http的1/10
+  - 证书成本
+    - 申请繁琐
+    - 价格不一
+    - 容易过期、失效
+
+### 5.2 性能分析技术
+
+- 服务器耗时
+  - Openssl speed, wrk(apache benchmark工具)
+  - 握手时间计算
+- 客户端耗时
+  - Chrome Remote Debug(移动端usb连接)
+  - Performance timing api
+- 环境模拟
+  - linux traffic control
+  - afc(facebook)
+
+## 6. https速度优化
+
+### 6.1 影响速度的因素
+
+- 网络耗时
+
+  - 最坏情况下增加7个RTT
+  - Round trip time
+
+- 计算耗时
+
+  - 客户端，50ms以上，如证书校验，密钥交换
+  - 服务器，15ms以上
+
+  > 不同网络制式下的RTT参考值
+
+  | 网络制式 | WIFI  | 4G    | 3G    | 2G    |
+  | -------- | ----- | ----- | ----- | ----- |
+  | RTT      | 70ms  | 100ms | 200ms | 400ms |
+  | 7个RTT   | 490ms | 700ms | 1.4s  | 2.8s  |
+
+### 6.2 https最坏情况下增加7个RTT
+
+- TCP握手
+
+- 302跳转到https协议下
+
+- TCP握手(https与http端口不一，重新建立http连接)
+
+- TLS完全握手阶段一
+
+- 客户端向CA校验证书
+
+  域名解析，握手，请求及响应(周期性，如7天一次，预防私钥泄露)
+
+- TLS完全握手阶段二
+
+### 6.3 速度优化
+
+#### 6.3.1 TCP协议层面
+
+- 拥塞窗口
+  - 3->10
+- TFO(tcp fast open)
+  - 应用范围小
+- 拥塞控制(BBR)
+  - 试验中
+
+#### 6.3.2 SSL协议层面
+
+- SSL握手时间优化
+
+  - 完全握手
+    - False start, 节省1个RTT
+
+  - 提升简化握手，节省1个RTT(完全握手的前提下)
+    - 全局session cache
+    - 全局session ticket
+  - TLS 1.3，实现0个RTT握手
+
+- SSL动态record size
+
+- 证书状态检查
+
+  - ocsp stapling(离线检查证书状态)
+
+#### 6.3.3 应用层协议层面
+
+- HSTS(HTTP Strict Transport Security)减少302跳转
+  - Strict-Transport-Security: max-age=1000; includeSubDomains
+- Preload list
+  - https://hstspreload.org/ 检查网站HSTS preload状态
+
+#### 6.3.4 应用层协议层面(http 1.x)
+
+- 串行
+- 管道
+  - 队头阻塞
+  - 实现上的BUG
+- 单域名多连接
+  - 影响TCP特性
+- 多域名
+  - HTTPS建连接消耗时间(建议**3**个域名)
+
+> 1个域名建议建立6个TCP连接，用https就更少。
+
+#### 6.3.5 应用层协议层面(http 2.x)
+
+- 二进制
+  - 方便解析
+- 多路复用
+- 头部压缩
+  - 90%压缩率
+- 优先级
+- Server push(客户端请求html，服务端返回html+html内的外链css)
+
+#### 6.3.6 应用层协议层面(QUIC)
+
+- 0 RTT建立连接
+- 没有TCP的队头阻塞
+
+#### 6.3.7 前后端资源优化
+
+- 域名收敛
+  - 移动页面域名不超过3个
+- 预先建立连接
+  - 用户行为预测
+- CDN就近接入
+  - 智能解析
+- 密码套件自动选择
+
+### 6.4 https计算优化
+
+#### 6.4.1 计算环节
+
+- 非对称密钥交换
+  - RSA, ECDHE_RSA
+- 对称加解密
+  - AES, RC4
+- 一致性验证
+  - SHA2
+- 证书检验
+  - RSA, ECDSA
+
+#### 6.4.2 分析维度
+
+- 算法
+  - openssl speed
+  - 对称加密，非对称密钥交换，签名算法，一致性校验算法
+- 协议
+  - 完全握手
+  - 函数级耗时
+- 系统
+  - 热点事件
+  - 工程实现
+
+#### 6.4.3 分析结论
+
+- 完全握手
+  - 性能降低到普通HTTP性能的10%以下
+- RSA算法对性能的影响
+  - 消耗整体性能的75%左右
+- ECC椭圆曲线
+  - 约占整体计算量的7%
+- 对称加解密及MAC计算
+  - 对性能影响很小（微秒级别）
+
+#### 6.4.4 如何优化？
+
+- 完全握手性能优化
+  - 算法分离
+    - RSA, ECDHE_RSA, DHE_RSA
+  - 并行代理计算
+    - 硬件加速卡，GPU，空闲CPU
+  - 异步执行
+    - openssl 状态机
+- 减少完全握手
+  - 分布式session cache
+  - 全局session ticket
+  - 自定义seesion ticket
+- RSA异步代理计算
+- 对称加密优化

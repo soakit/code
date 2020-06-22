@@ -1,0 +1,471 @@
+# 1. webpack
+
+## 1.1 知识点
+
+### 1.1.1 核心概念
+
+- entry—指定打包入口文件
+
+- output—打包后的⽂件位置
+
+- loader—webpack是模块打包工具，而模块不仅仅是js，还可以是css，图⽚或者其他格式。但是webpack默认只知道如何处理js模块，那么其他格式的模块的处理和处理方式就需要loader了。
+
+  > loader有顺序，从右到左，从下到上。
+
+  - file-loader:处理静态资源模块。
+    原理是把打包⼊口中识别出的资源模块，移动到输出目录，并且返回一个地址名称。
+
+    使用场景：就是当我们需要模块，仅仅是从源代码挪移到打包目录，就可以使⽤用file-loader来处理，txt，svg，csv，excel，图⽚资源等。
+
+  - url-loader：处理file-loader所有的事情，并可以针对限定图⽚大小、转换成base64字符串，并打包到js⾥。
+
+  - css-loader：分析css模块之间的关系，并合成一个css。
+
+  - style-loader：会把css-loader⽣成的内容，以style挂载到页面的header部分。
+
+  - sass-loader：把sass语法转换成css ，依赖node-sass模块。
+
+  - postcss-loader：样式自动添加浏览器前缀。
+
+- plugin
+
+  - HtmlWebpackPlugin—在打包结束后，⾃动⽣成⼀个html文件，并把打包生成的js模块引⼊到该html 中。
+
+- sourceMap—源代码与打包后代码的映射关系。
+
+- WebpackDevServer—提升开发效率的利器。
+
+## 1.2 tree-shaking 的工作原理
+
+## 1.3 code splitting用的是什么插件
+
+## 1.4 如何提高 webpack 构件速度
+
+## 1.5 利用 DllPlugin 预编译资源模块
+
+## 1.6 使用 Happypack 加速代码构建
+
+# 2. node
+
+## 2.1 fs模块
+
+- 写文件—writeFile
+- 读文件—readFile，先把数据全部读取到内存中，然后回调。
+  - 极其占用内存。
+  - 资源利用极其不充分。
+
+## 2.2 stream模块
+
+- 流—读一点，写一点。
+  - 原理：生产者/消费者
+  - 读取流—fs.createReadStream, req
+  - 写入流—fs.createWriteStream, res
+  - 读写流—压缩，加密
+
+> 面向字节的设备：键盘 → 一个字一个字处理
+>
+> 面向流的设备：网卡 → 一个块一个块处理
+
+> 如何断点续传？
+>
+> 使用content-range头。仅限客户端(client, app)。浏览器本身可以(web应用不行)。
+
+## 2.3 events模块
+
+- 使用：require('events').EventEmitter的on和emit
+- 原理：发布订阅模式
+
+## 2.4 websocket
+
+- 优点：全双工、性能好、跨域
+- 原理：Net模块提供一个异步API能够创建基于流的TCP服务器，客户端与服务器建立连接后，服务器可以获得一个全双工Socket对象，服务器可以保存Socket对象列表，在接收某客户端消息时，推送给其他客户端。
+- 框架：socket.io
+  - 服务端：监听connection/disconnect事件
+  - 客户端：监听connect/disconnect事件
+  - 支持优雅降级
+    - WebSocket
+    - WebSocket over FLash XHR Polling
+    - XHR Multipart Streaming Forever Iframe
+    - JSONP Polling
+
+## 2.5 http模块
+
+### 2.5.1 get与post
+
+- get—请求url，url长度根据浏览器及服务器的不同而有不同限制。
+
+- post—请求体，根据服务器的不同而有不同限制。
+
+  > 如tomcat限制2M，conf目录下，server.xml文件，修改maxPostSize=”0”,即取消POST的大小限制。
+  >
+  > Tomcat 7.0.63及之后的版本 负数才代表不限制(之前0及负数都代表不限制)
+
+参考链接：https://www.cnblogs.com/cuihongyu3503319/p/5892257.html
+
+### 2.5.2 post请求方式
+
+- text/plain
+
+  用的少，纯文字。
+
+- application/x-www-form-urlencoded
+
+  &方式，如foo=bar&baz=xxx；用于简单数据。
+
+- multipart/form-data
+
+  结构是以分界符进行分隔，每个分界符后面带有 `\r\n`，Boundary的值来自content-type第二项(随机字符串)，最后一个分界符会多个 `--`，表示数据传输结束。
+
+  ```shell
+  ------WebKitFormBoundaryKnsKCAS4s0kSeNQ3
+  Content-Disposition: form-data; name="外卖测试.png"; filename="Pictures/aa.png"
+  Content-Type: image/png
+  
+  
+  ------WebKitFormBoundaryKnsKCAS4s0kSeNQ3--
+  ```
+
+参考链接：https://www.cnblogs.com/dreamless/p/9052902.html
+
+### 2.5.3 文件上传
+
+- iframe + form
+
+普通 form 实现其中有最大的问题是表单提交后，页面会进行跳转，为了解决这个问题，将 form 的 target 设置为一个隐藏的 iframe，保证调用完成 submit 后仍旧可停留当前页面。
+
+```html
+<form action="/api/upload" target="empty-iframe" enctype="multipart/form-data" method="POST">
+  <input name="file" type="file" multiple webkitdirectory="" />
+  <button type="submit">提交</button>
+</form>
+<iframe src="" name="empty-iframe" frameborder="0" style="width: 100%;min-height: 400px;"></iframe>
+```
+
+- FormData
+
+IE10+支持了 FormData 对象，使用方式如下。
+
+```javascript
+const xhr = new XMLHttpRequest()
+const form = new FormData()
+form.append(key, value)
+form.append(file.name, file.file)
+xhr.open('post', action, true)
+xhr.send(form)
+```
+
+> xhr.onprogress下载进度事件，xhr.upload.onprogress上传进度事件。
+>
+> 参考链接：https://blog.csdn.net/hahahhahahahha123456/article/details/80608568
+
+# 3. 服务器
+
+## 3.1 express
+
+express—非破坏式的框架(尽可能保持原生)。
+
+### 3.1.1 中间件
+
+- 插件—补充框架功能，如express.static(dir)。
+- 流水线—复用、分工、next顺序
+
+### 3.1.2 数据交互
+
+- req
+
+  - get请求—req.query
+
+  - post请求
+
+    - 普通：body-parser
+
+      ```js
+      var express = require('express');
+      var bodyParser = require('body-parser');
+      var app = new express();
+      
+      //创建application/json解析
+      var jsonParser = bodyParser.json();
+      //创建application/x-www-form-urlencoded
+      var urlencodedParser = bodyParser.urlencoded({extended: false});
+      
+      //POST /login 中获取URL编码的请求体
+      app.post('/login', urlencodedParser, function(req, res){
+          if(!req.body) return res.sendStatus(400);
+          res.send('welcome, ' + req.body.username);
+      })
+      //POST /api/users 获取JSON编码的请求体
+      app.post('/api/users', jsonParser, function(req,res){
+          if(!req.body) return res.sendStatus(400);
+          //create user in req.body
+      })
+      ```
+
+    - 文件：multer
+
+      ```js
+      const express =require('express')
+      const multer =require('multer')
+      
+      // 处理multipart/form-data
+      const upload = multer({dest:__dirname + '/static/upload'})//设置上传的目录文件夹
+      
+      app.post('/upload', upload.single('file'),(req,res)=>{
+        const data = {
+          file: req.file, // 获取到的文件
+          message: req.body // 获取到的表单数据
+        }
+      	res.json(data)
+      })
+      ```
+
+- res
+
+  - res.send(any)
+  - res.sendFile(绝对路径)
+  - res.sendState(statusCode)
+  - res.redirect(地址/路径)
+
+### 3.1.3 cookie
+
+- cookie-parser
+
+  cookie-parser 中间件用来解析客户端传过来的cookie。
+
+  ```js
+  const express = require('express');
+  const cookieParser = require('cookie-parser');
+   
+  const app = express();
+  app.listen(8888);
+  
+  const signStr = 'fermtp34n537m3o450'
+  const signStr2 = ['fermtp34n537m3o450', 'fsjvlkcxoi']
+  // 使用解析cookie中间件
+  // cookieParser()参数一，用来设置签名密钥，可以是一个数组，设置多个。
+  app.use(cookieParser(signStr));
+   
+  app.get('/', function (req, res) {
+      console.log('Cookies: ', req.cookies); // 获取cookie信息
+      console.log('signedCookies: ', req.signedCookies);
+      // 设置cookie
+      // 参数一表示cookie名称, 参数二表示cookie的值
+      // 参数三表示cookie的配置选项
+      // domain-域名, path-路径, expires-过期时间, maxAge-有效时间(以毫秒为单位)
+      // httpOnly-只能由web服务器访问, secure-是否与https一起使用, signed-是否签名
+      res.cookie('test', 'test', {path: '/', expires: new Date(Date.now() + 3600 * 1000)});
+      res.cookie('name', 'xiaoxu', {maxAge: 3600 * 1000});
+      res.end();
+  });
+  ```
+
+- cookie-session
+
+  cookie-session 中间件用来建立基于cookie的会话session。
+
+  ```js
+  const express = require('express');
+  const cookieSession = require('cookie-session');
+   
+  let app = express();
+  app.listen(8888);
+   
+  app.use(cookieSession({
+      name: 'session', // 会话在cookie中的名称
+      keys: ['j239r5ndgffte'], // 用于签名的密钥
+      maxAge: 3600 * 1000 // cookie过期时间，单位毫秒
+  }));
+   
+  app.get('/', function (req, res) {
+      // 获取会话数据
+      console.log(req.session);
+      // 设置会话数据
+      req.session.name = 'xiaoxu';
+      req.session.age = 24;
+      req.session.sex = '男';
+    
+      res.end();
+  });
+  ```
+
+### 3.1.4 路由
+
+- 创建
+
+  ```js
+  const express = require('express');
+  const router = express.Router();
+  ```
+
+- 路由添加东西
+
+  ```js
+  router.get('地址', () => {})
+  router.post('地址', () => {})
+  router.use('路径', () => {}) // 挂载子路由
+  ```
+
+- url风格
+
+  - RESTFUL风格，如/article/1，利于SEO。
+  - 普通风格，如/article?id=1，灵活。
+
+### 3.1.5 渲染方式
+
+- 后台渲染
+
+  - 优点—利于SEO、相对稳定
+
+  - 模板渲染引擎
+
+    - pug/jade
+
+      - 破坏式；破坏了html，使用缩进规定层级。
+
+    - ejs
+
+      - 非破坏式；保留html结构。
+
+      - 输出
+
+        ```ejs
+        转义输出：<%= str %>
+        非转义输出：<%- str %>
+        ```
+
+- 前端渲染
+
+  - 优点—灵活、体验好、传输体积小
+
+## 3.2 koa
+
+### 3.2.1 中间件
+
+- koa-session
+
+- koa-jwt
+
+  JWT的构成：head.payload.hash
+
+  - head
+    - 加密算法、令牌类型
+  - payload
+    - 用户信息、签发时间、过期时间
+  - hash
+    - 根据head, payload及密钥(存放在后端)加密得到hash
+
+  > Bearer Token用的是oAuth2协议
+
+- koa-static-cache
+
+  相比koa-static，有cache功能。
+
+- koa-better-body
+
+  处理post请求。
+
+  ```js
+  var koa = require('koa');
+  var body = require('koa-better-body');
+  var app = koa();
+   
+  app
+    .use(body())
+    .use(function* () {
+      console.log(this.request.body); // if buffer or text
+      console.log(this.request.files); // if multipart or urlencoded
+      console.log(this.request.fields); // if json
+    })
+    .listen(8080, function () {
+      console.log('koa server start listening on port 8080');
+    });
+  ```
+
+- koa-convert
+
+  将中间件平滑升级到koa2。
+
+- koa-router
+
+- mysql-pro
+
+  - 防注入
+  - 支持事务
+
+### 3.2.2 数据交互
+
+- ctx.req—node原生对象
+- ctx.res—node原生对象
+- ctx.request—封装对象
+  - query
+  - headers
+  - url
+  - method
+- ctx.response—封装对象
+  - body
+  - set(key, value)—设置头
+  - status=状态码
+- ctx.cookies
+  - .get(key)
+  - .set(key, value, options)
+- ctx.session
+
+## 3.3 express vs koa
+
+| express                         | koa                                                          |
+| ------------------------------- | ------------------------------------------------------------ |
+| 非破坏式                        | 破坏式                                                       |
+| 不强依赖router                  | 强依赖router                                                 |
+| app.use((req, res, next) => {}) | app.use(function *(ctx, next) => {}) // v1<br />app.use(async ((ctx, next)) => {}) // v2 |
+
+# 4. mysql
+
+## 4.1 建立连接
+
+mysql.createPool > mysql.createConnection
+
+## 4.2 常见问题
+
+### 4.2.1 逻辑删除与硬删除的选择？
+
+推荐加个类似的表，表名是**表名_delete**，空闲时间同步删除数据并删除原表的删除数据。
+
+### 4.2.2 数据库事务ACID
+
+- A—Atomicity，原子性，要么发生，要么不发生。
+- C—Consitency，一致性，事务前后状态一致。
+- I—Isolation，隔离性，事务间独立。
+- D—Durability，持久性，事务发生，作用就永久。
+
+### 4.2.3 自增id的好处与坏处？
+
+- 好处
+
+  在添加一行时无需对自增id列赋值，在添加一行数据时可留空，会自动根据前一字段id值+1填充
+
+  单个表中能够唯一标识该字段，保证原子性。在单个表中使用自增ID能够保证主键不重复
+
+- 坏处
+
+  不存在连续性，也就是说若表中存有3行数据，ID字段为1,2,3 那么当删除字段2时就变为1,3，不具有连续性
+
+  合并表会出现ID重复的情况，上面说个使用自增ID能够在单个表中保证ID字段唯一，但两个表何为1个表，时不具有这种性质的。
+
+- 不使用自增ID的场景
+
+  正是因为自增ID的缺点也就是无法在多个表中，或者多个数据库中保持ID主键唯一不重复，所以若是使用分布式数据库以及数据合并的情况下时不能使用自增ID的。
+
+  若是能够有其他的字段能作为主键保证唯一性，无需使用自增ID
+
+- 自增ID的替代者UUI
+
+  UUID含义是通用唯一识别码 (Universally Unique Identifier)，指在一台机器上生成的数字，它保证对在同一时空中的所有机器都是唯一的。通常平台会提供生成的API。换句话说能够在一定的范围内保证主键id的唯一性。
+
+  UUID的目的，是让分布式系统中的所有元素，都能有唯一的辨识信息，而不需要通过中央控制端来做辨识信息的指定。如此一来，每个人都可以创建不与其它人冲突的UUID。在这样的情况下，就不需考虑数据库创建时的名称重复问题。也就完美解决的自增ID的缺点。
+
+  参考链接：https://www.jianshu.com/p/82f5092039d8
+
+
+
+
+
