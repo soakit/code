@@ -41,9 +41,12 @@ const myPromise = (function(){
         })
     }
     
-    myPromise.reject = function(reason) {
+    myPromise.reject = function(data) {
+        if (data instanceof myPromise) {
+            return data;
+        }
         return new myPromise((resolve, reject) => {
-            reject(reason);
+            reject(data);
         })
     }
     myPromise.all = function(promises) {
@@ -55,15 +58,17 @@ const myPromise = (function(){
             let resolvedCount = 0;
             let resolveValues = new Array(promsieNum);
             for (let i = 0; i < promsieNum; i++) {
-                myPromise.resolve(promises[i].then(function (value) {
-                    resolveValues[i] = value;
-                    resolvedCount++;
-                    if (resolvedCount === promsieNum) {
-                        return resolve(resolveValues)
-                    }
-                }, function (reason) {
-                    return reject(reason);
-                }))
+                myPromise.resolve(
+                    promises[i].then(function (value) {
+                        resolveValues[i] = value;
+                        resolvedCount++;
+                        if (resolvedCount === promsieNum) {
+                            return resolve(resolveValues)
+                        }
+                    }, function (reason) {
+                        return reject(reason);
+                    })
+                )
             }
         })
     }
@@ -76,8 +81,8 @@ const myPromise = (function(){
                 p => myPromise.resolve(p).then(
                     data => {
                         resolve(data)
-                    }, err => {
-                        reject(err)
+                    }, reason => {
+                        reject(reason)
                     })
             )
         })
