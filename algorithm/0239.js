@@ -26,6 +26,4 @@ var maxSlidingWindow = function (nums, k) {
     return maxArr
 };
 
-// console.log(maxSlidingWindow([-7, -8, 7, 5, 7, 1, 6, 0], 4))
-console.log(maxSlidingWindow([1,3,-1,-3,5,3,6,7], 3))
-// console.log(maxSlidingWindow([7, 2, 4], 2))
+console.log(maxSlidingWindow([1, 3, -1, -3, 5, 3, 6, 7], 3))
