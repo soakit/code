@@ -58,17 +58,17 @@ const myPromise = (function(){
             let resolvedCount = 0;
             let resolveValues = new Array(promsieNum);
             for (let i = 0; i < promsieNum; i++) {
-                myPromise.resolve(
-                    promises[i].then(function (value) {
-                        resolveValues[i] = value;
-                        resolvedCount++;
-                        if (resolvedCount === promsieNum) {
-                            return resolve(resolveValues)
+                myPromise.resolve(promises[i])
+                    .then(function (value) {
+                            resolveValues[i] = value;
+                            resolvedCount++;
+                            if (resolvedCount === promsieNum) {
+                                return resolve(resolveValues)
+                            }
+                        }, function (reason) {
+                            return reject(reason);
                         }
-                    }, function (reason) {
-                        return reject(reason);
-                    })
-                )
+                    )
             }
         })
     }
