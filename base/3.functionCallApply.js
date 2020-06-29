@@ -5,9 +5,10 @@ Function.prototype.mycall = function () {
     }
     var [context, ...args] = arguments
 	var ctx = context || window
-	ctx.fn = this
-	var result = ctx.fn(...args)
-	delete ctx.fn
+	// 用Symbol > 随机数 > 不常用的作为key，这里使用不常用的
+	ctx.__fn__ = this
+	var result = ctx.__fn__(...args)
+	delete ctx.__fn__
 	return result
 }
 
@@ -18,9 +19,9 @@ Function.prototype.myapply = function () {
     }
     var [context, ...args] = arguments
 	var ctx = context || window
-	ctx.fn = this
-	var result = ctx.fn(...args)
-	delete ctx.fn
+	ctx.__fn__ = this
+	var result = ctx.__fn__(...args)
+	delete ctx.__fn__
 	return result
 }
 
