@@ -13,23 +13,24 @@ var removeDuplicates = function (nums) {
      * 3.1  相等则将当前元素赋给首次出现重复的元素(其索引为当前索引-count)
      * 3.2  不等则重复个数累加
      */
-    var len = nums.length;
+    const len = nums.length;
     // 剪枝
     if (len <= 1) {
         return nums.length
     }
-    var count = 0;
-    for (var i = 1; i < len; i++) {
-        if (nums[i] !== nums[i - 1]) {
-            // 当前首次出现重复元素的索引为 i - count
-            nums[i - count] = nums[i]
-        } else {
-            // 重复个数计数
-            count++
-        }
-    }
-    return nums.length - count
+    let count = 0 // 重复的个数
+	for (let i=1; i< len; i++) {
+		const tmp = nums[i]
+		// 当前的与前一个相比较
+		if (tmp === nums[i -1]) {
+			count++
+		} else {
+			// 当前出现重复元素的索引为i - count
+			nums[i - count] = tmp
+		}
+	}
+    return len - count
 };
 
 // test
-removeDuplicates([1, 1, 2])
+removeDuplicates([1, 2, 2, 3, 4, 4, 5])

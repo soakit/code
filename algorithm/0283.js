@@ -49,15 +49,16 @@ var moveZeroes = function (nums) {
     if (len <= 1) {
         return nums
     }
+    const ZERO = 0
     let notZeroIndex = 0
     for (let i = 0; i < len; i++) {
-        if (nums[i] !== 0) {
+        if (nums[i] !== ZERO) {
             nums[notZeroIndex] = nums[i]
             notZeroIndex++
         }
     }
     for (let i = notZeroIndex; i < len; i++) {
-        nums[i] = 0
+        nums[i] = ZERO
     }
     return nums
 };
