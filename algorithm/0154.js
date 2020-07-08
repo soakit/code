@@ -23,10 +23,10 @@ var findMin = function (nums) {
     let mid = (low + high) >> 1;
     if (nums[mid] > nums[high]) {
       low = mid + 1;
-    } else if (nums[mid] === nums[high]) {
-      high--;
-    } else {
+    } else if (nums[mid] < nums[high]) {
       high = mid;
+    } else {
+      high--;
     }
   }
   return nums[low];
