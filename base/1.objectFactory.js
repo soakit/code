@@ -15,7 +15,10 @@ var objectFactory = function() {
     // 效果：obj模拟成Person的实例
     obj.__proto__ = ctor.prototype;
     var ret = ctor.apply(obj, args)
-    return typeof ret === 'object' ? ret : obj;
+    if((typeof ret === 'object' || typeof ret === 'function') && ret !== null) {
+        return ret;
+    }
+    return obj;
 }
 
 function Person(name, age) {
