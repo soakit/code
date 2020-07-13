@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\base\\e.waterfall.js"
+            "program": "${workspaceFolder}\\base\\c.promise.js"
         }
     ]
 }
