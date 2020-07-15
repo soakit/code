@@ -23,7 +23,7 @@ var myPow = function (x, n) {
     }
     if (n < 0) {
         if (x === 0) {
-            throw new Error('负数的指数不能为0')
+            throw new Error('负数的底数不能为0')
         }
         return 1.0 / myPow(x, -n)
     }
