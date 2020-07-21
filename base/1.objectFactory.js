@@ -33,8 +33,8 @@ function Person2(name, age) {
     }
 }
 
-var p = objectFactory(Person, 'zhangsan', 24)
-var p2 = objectFactory(Person2, 'lisi', 20)
-var p3 = new Person('wangwu', 30)
+var person1 = objectFactory(Person, 'zhangsan', 24)
+var person2 = objectFactory(Person2, 'lisi', 20)
+var person3 = new Person('wangwu', 30)
 
-console.log(p, p2, p3)
+console.log(person1, person2, person3)
