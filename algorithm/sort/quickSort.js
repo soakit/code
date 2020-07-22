@@ -1,7 +1,8 @@
 function quickSort(array, left, right) {
   var length = array.length;
-  (left = typeof left === "number" ? left : 0),
-    (right = typeof right === "number" ? right : length - 1);
+
+  left = typeof left === "number" ? left : 0;
+  right = typeof right === "number" ? right : length - 1;
 
   if (left < right) {
     var index = left - 1;
