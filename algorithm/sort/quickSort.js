@@ -17,7 +17,6 @@ function quickSort(arr, start, end) {
       var temp = arr[start];
       arr[start] = arr[end];
       arr[end] = temp;
-      console.log(arr)
     }
   }
   quickSort(arr, rStart, start - 1);
@@ -25,31 +24,29 @@ function quickSort(arr, start, end) {
 }
 
 function quickSort(arr, start, end) {
-  var index;
   var pivot = arr[Math.floor((end + start) / 2)], // 以中间为基准值
-    i = start, // 左指针
-    j = end; // 右指针
-  while (i <= j) {
-    while (arr[i] < pivot) {
-      i++;
+    rStart = start, // 左指针
+    rEnd = end; // 右指针
+  while (rStart <= rEnd) {
+    while (arr[rStart] < pivot) {
+      rStart++;
     }
-    while (arr[j] > pivot) {
-      j--;
+    while (arr[rEnd] > pivot) {
+      rEnd--;
     }
-    if (i <= j) {
-      var t = arr[i]
-      arr[i] = arr[j]
-      arr[j] = t
-      i++;
-      j--;
+    if (rStart <= rEnd) {
+      var t = arr[rStart]
+      arr[rStart] = arr[rEnd]
+      arr[rEnd] = t
+      rStart++;
+      rEnd--;
     }
   }
-  index = i;
-  if (start < index - 1) { // 处理基准值左边
-    quickSort(arr, start, index - 1);
+  if (start < rStart - 1) { // 处理基准值左边
+    quickSort(arr, start, rStart - 1);
   }
-  if (index < end) { // 处理基准值右边
-    quickSort(arr, index, end);
+  if (rStart < end) { // 处理基准值右边
+    quickSort(arr, rStart, end);
   }
   return arr;
 }
