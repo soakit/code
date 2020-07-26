@@ -60,25 +60,25 @@ function quickSort(arr, start, end) {
     end = arr.length - 1;
   }
 
-  var pivotIndex;
-  var pivot = arr[start], pivotIndex = start + 1, temp; // 以第一个为基准值
+  var pivot = arr[start], temp; // 以第一个为基准值
+  var newStart = start + 1;
   for (var i = start + 1; i <= end; i++) {
     if (arr[i] < pivot) {
-      if (i != pivotIndex) {
-        temp = arr[pivotIndex];
-        arr[pivotIndex] = arr[i];
+      if (i != newStart) {
+        temp = arr[newStart];
+        arr[newStart] = arr[i];
         arr[i] = temp;
       }
-      pivotIndex++;
+      newStart++;
     }
   }
-  pivotIndex -= 1
+  newStart -= 1
 
-  arr[start] = arr[pivotIndex];
-  arr[pivotIndex] = pivot;
+  arr[start] = arr[newStart];
+  arr[newStart] = pivot;
 
-  quickSort(arr, start, pivotIndex - 1);
-  quickSort(arr, pivotIndex + 1, end);
+  quickSort(arr, start, newStart - 1);
+  quickSort(arr, newStart + 1, end);
 
   return arr
 }
@@ -92,26 +92,26 @@ function quickSort(arr, start, end) {
     end = arr.length - 1;
   }
 
-  var pivotIndex;
-  var pivot = arr[end], temp, pivotIndex = start; // 以最后一个为基准值
+  var pivot = arr[end], temp; // 以最后一个为基准值
+  var newStart = start;
 
   for (var i = start; i < end; i++) {
     if (arr[i] < pivot) {
-      if (i != pivotIndex) {
-        temp = arr[pivotIndex];
-        arr[pivotIndex] = arr[i];
+      if (i != newStart) {
+        temp = arr[newStart];
+        arr[newStart] = arr[i];
         arr[i] = temp;
       }
-      pivotIndex++;
+      newStart++;
     }
   }
 
-  temp = arr[pivotIndex];
-  arr[pivotIndex] = arr[end];
+  temp = arr[newStart];
+  arr[newStart] = arr[end];
   arr[end] = temp;
 
-  quickSort(arr, start, pivotIndex - 1);
-  quickSort(arr, pivotIndex + 1, end);
+  quickSort(arr, start, newStart - 1);
+  quickSort(arr, newStart + 1, end);
 
   return arr
 }
