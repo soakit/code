@@ -61,24 +61,27 @@ function quickSort(arr, start, end) {
   }
 
   var pivot = arr[start], temp; // 以第一个为基准值
-  var ltPivotCount = start + 1; // 小于基准值的个数
-  for (var i = start + 1; i <= end; i++) {
+  var pointer = start + 1; // 从第二个开始
+  for (var i = pointer; i <= end; i++) {
     if (arr[i] < pivot) {
-      if (i != ltPivotCount) { // 顺序错位才交换值
-        temp = arr[ltPivotCount];
-        arr[ltPivotCount] = arr[i];
+      if (i != pointer) { // 顺序错位才交换值
+        temp = arr[pointer];
+        arr[pointer] = arr[i];
         arr[i] = temp;
       }
-      ltPivotCount++;
+      pointer++;
     }
   }
-  ltPivotCount -= 1 // 减1取索引
+  // 还原指针至前一位(循环完时，pointer处没有可处理项)
+  pointer -= 1
 
-  arr[start] = arr[ltPivotCount];
-  arr[ltPivotCount] = pivot;
+  // pivot = arr[start]
+  // 与上处一起，交换起始处与指针处的值
+  arr[start] = arr[pointer];
+  arr[pointer] = pivot;
 
-  quickSort(arr, start, ltPivotCount - 1);
-  quickSort(arr, ltPivotCount + 1, end);
+  quickSort(arr, start, pointer - 1); // 处理起始至指针前一位
+  quickSort(arr, pointer + 1, end); // 处理指针后一位至最后
 
   return arr
 }
