@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./kvue3.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <button id="btn">age++</button>
+    <script>
+        const root = document.getElementById('app')
+        const btn = document.getElementById('btn')
+        
+        const obj = reactive({
+            name: 'zhangsan',
+            age: 18
+        })
+        const doubleAge = computed(() => obj.age * 2)
+
+        effect(() => {
+            root.innerHTML = `name: ${obj.name}, age: ${obj.age}, doubleAge: ${doubleAge.value}`
+        })
+        
+        btn.addEventListener('click', function(){
+            obj.age++
+        })
+    </script>
+</body>
+</html>
