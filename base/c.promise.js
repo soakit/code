@@ -1,3 +1,40 @@
+/**
+ * 1. 定义Promise的三种状态常量
+ * 2. 处理constructor
+ * 2.1 constructor接收一个函数exec
+ * 2.2 成功与失败回调队列
+ * 2.3 resolveFn与rejectFn
+ * 2.3.1 resolveFn：设置state和value,依次执行成功队列中的函数，并清空队列
+ * 2.3.2 rejectFn：设置state和value,依次执行失败队列中的函数，并清空队列
+ * 2.4 try catch，try内执行exec(resolveFn, rejectFn),catch内执行rejectFn
+ * 3. 处理then(onFulfilled, onRejected)
+ * 3.1 取得state和value
+ * 3.2 new Promise(onFulfilledNext, onRejectedNext)
+ * 3.3 成功时执行的函数，onFulfilledNext(onFulfilled(value))
+ * 3.4 失败时执行的函数，捕获执行过程中的错误err，onRejectedNext(err)
+ * 3.5 当状态为PENDING时，将成功和失败执行的函数加入执行队列等待执行
+ * 3.6 当状态为FULFILLED时，执行成功函数
+ * 3.7 当状态为REJECTED时，执行失败函数
+ * 4. resolve
+ * 4.1 如果参数是Promise实例，直接返回这个实例
+ * 4.2 否则new Promise(resolve => resolve(value))
+ * 5. reject
+ * 5.1 new Promise((resolve, reject) => reject(value))
+ * 6. all
+ * 6.1 new Promise((resolveFn, rejectFn) => {})
+ * 6.2 传入的数组每项都this.resolve后，resolveFn(all_resolved_values)
+ * 7. race
+ * 7.1 有一项this.resolve，就resolveFn(resolve_value)
+ * 8. catch
+ * 8.1 catch(onRejected) { return this.then(undefined, onRejected) }
+ * 9. finally
+ * 9.1 finally(cb) { return this.then(
+        value => this.resolve(cb()).then(() => value),
+        reason => this.resolve(cb()).then(() => { throw reason })
+    );
+}
+ */
+
 const MyPromise = (function () {
     // 定义Promise的三种状态常量
     const PENDING = 'PENDING'
