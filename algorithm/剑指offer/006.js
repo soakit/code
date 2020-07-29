@@ -6,14 +6,11 @@
     输出：[2,3,1]
  */
 var reversePrint = function (head) {
-  var recursive = function(node, result) {
-      if (node === null) {
-          return result
-      }
-      if (node.next !== null) {
-          recursive(node.next, result)
-      }
-      result.push(node.val)
-  }
-  return recursive(head, []);
+    if (head === null) {
+        return []
+    }
+    var cur = head;
+    var result = reversePrint(cur.next);
+    result.push(cur.val)
+    return result;
 };
