@@ -27,9 +27,9 @@ const server = net.createServer(sock => {
 			console.log('版本不对', headers['sec-websocket-version'])
 		} else {
 			const key = headers['sec-websocket-key']
-			const mask = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
+			const mask = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11' // 13版本，RFC里固定的一个值
 			
-			// sha1(key+mask) -> base64 -> client
+			// sha1(key+mask)转成base64传给client
 			const hash = crypto.createHash('sha1');
 			hash.update(key + mask)
 			const key2 = hash.digest('base64')
