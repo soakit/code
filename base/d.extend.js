@@ -37,7 +37,7 @@ Object.defineProperty(Person.prototype, "constructor", {
 Person.isIntelligent = function(){
     return true
 }
-// 继承父类的静态方法
+// 继承父类的静态属性和方法
 Person.__proto__ = Animal
 
 var a1 = new Animal('dog')
