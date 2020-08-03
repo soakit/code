@@ -1,16 +1,14 @@
 Function.prototype.before = function (beforeFn) {
-    const self = this;
-    return function () {
-        beforeFn.apply(this, arguments)
-        return self.apply(this, arguments)
+    return (...args) => {
+        beforeFn.apply(this, args)
+        return self.apply(this, args)
     }
 }
 
 Function.prototype.after = function (afterFn) {
-    const self = this;
-    return function () {
-        const ret = self.apply(this, arguments)
-        afterFn.apply(this, arguments)
+    return (...args) => {
+        const ret = this.apply(this, args)
+        afterFn.apply(this, args)
         return ret
     }
 }
