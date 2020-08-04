@@ -173,9 +173,14 @@ const MyPromise = (function () {
             })
         }
 
+        // 无参数和普通数据对象 [直接返回一个resolved状态的 Promise 对象]
+        // 一个Promise实例 [直接返回当前实例]
+        // ?一个thenable对象(thenable对象指的是具有then方法的对象) [转为 Promise 对象，并立即执行thenable对象的then方法。]
         static resolve(value) {
             // 如果参数是MyPromise实例，直接返回这个实例
-            if (value instanceof MyPromise) return value
+            if (value instanceof MyPromise) {
+                return value
+            }
             return new MyPromise(resolve => resolve(value))
         }
 
