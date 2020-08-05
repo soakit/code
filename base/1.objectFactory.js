@@ -7,7 +7,8 @@
  * 4.判断执行的返回值类型，是对象则返回，否则返回obj
  * (js中的构造函数，是不需要有返回值的，所以默认返回的是新创建的空对象obj)
  */
-var objectFactory = function() {
+// 方式1
+var objectFactory = function () {
     var obj = {}
     // 取出构造函数 和 实参
     const [ctor, ...args] = arguments
@@ -15,10 +16,20 @@ var objectFactory = function() {
     // 效果：obj模拟成Person的实例
     obj.__proto__ = ctor.prototype;
     var ret = ctor.apply(obj, args)
-    if((typeof ret === 'object' || typeof ret === 'function') && ret !== null) {
+    if ((typeof ret === 'object' || typeof ret === 'function') && ret !== null) {
         return ret;
     }
     return obj;
+}
+// 方式2
+var objFactory = function () {
+    // 取出构造函数 和 实参
+    const [ctor, ...args] = arguments
+    // 创建ctor实例 obj
+    var obj = Object.create(ctor.prototype);
+    // 使用apply函数运行args, 把 obj 绑定到 this
+    var ret = ctor.apply(obj, args);
+    return ret instanceof Object ? ret : obj;
 }
 
 function Person(name, age) {
