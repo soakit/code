@@ -40,21 +40,22 @@
     return temp.next;
 }; */
 
+/**
+ * 用双指针
+ * 1.pre, cur两个指针一步一步走，当走到要删除的节点(此时指向cur)时
+ * 2.将pre的next指针指向cur的next，即实现了删除cur节点
+ */
 var deleteNode = function(head, val) {
     // 剪枝 如果删除的是第一个
     if (head && head.val === val) {
         return head.next
     }
-    // 用双指针
     let pre = head
     let cur = head.next
-    // 不是要删除的值就链上去
     while(pre.val !== val && cur.val !== val){
         pre = pre.next
         cur = cur.next
     }
-    // 续尾
     pre.next = cur.next
-    // 返回头节点
     return head
 };

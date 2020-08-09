@@ -9,8 +9,7 @@ var reversePrint = function (head) {
     if (head === null) {
         return []
     }
-    var cur = head;
-    var result = reversePrint(cur.next);
-    result.push(cur.val)
+    var result = reversePrint(head.next);
+    result.push(head.val)
     return result;
 };
