@@ -1,6 +1,7 @@
 /* 
 找出数组中重复的数字。
-在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。
+在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。
+数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。
 
 示例 1：
     输入：
@@ -25,20 +26,28 @@ var findRepeatNumber = function (nums) {
 
 // 原地交换处理
 // 时间: O(n) 空间: O(1)
-var findRepeatNumber = function (nums) {
-  var i = 0;
-  while (i < nums.length) {
-    if (nums[i] === i) {
-      i += 1;
-      continue;
+/**
+ * 前提：限定了所有数字在0 ~ n-1内，因此不会越界
+ * 1. 循环，不停交换当前项和以当前项值为索引
+ * 2. 如果找到当前项的值和以当前项值为索引相等，且当前项的值不为当前索引值，则表示找到，返回当前项的值
+ * 3. 如果当前项的值是当前索引值，则进行索引+1，进行下轮循环
+ */
+var findRepeatNumber = function(nums) {
+	var i = 0;
+	while(i < nums.length) {
+		var tmp = nums[i]
+		if (tmp === i) {
+			i += 1;
+			continue;
     }
-    // 限定了所有数字在0 ~ n-1内，因此不会越界
-    if (nums[nums[i]] === nums[i]) {
-      return nums[i];
+		if (nums[tmp] === tmp) {
+			return tmp
     }
-    const tmp = nums[i];
-    nums[i] = nums[tmp];
-    nums[tmp] = tmp;
-  }
-  return -1;
-};
+    // var tmp = nums[i]
+		nums[i] = nums[tmp]
+		nums[tmp] = tmp;
+	}
+	return -1;
+}
+
+findRepeatNumber([2, 3, 1, 0, 2, 5, 3])
