@@ -9,13 +9,13 @@
  */
 // 方式1
 var objectFactory = function () {
-    var obj = {}
+    const obj = {}
     // 取出构造函数 和 实参
     const [ctor, ...args] = arguments
     // 将构造函数的原型挂到obj.__proto__上
     // 效果：obj模拟成Person的实例
     obj.__proto__ = ctor.prototype;
-    var ret = ctor.apply(obj, args)
+    const ret = ctor.apply(obj, args)
     if ((typeof ret === 'object' || typeof ret === 'function') && ret !== null) {
         return ret;
     }

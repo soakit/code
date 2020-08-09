@@ -14,19 +14,16 @@
     因此移动较矮的指针，看看能不能面积变大
  */
 var maxArea = function (height) {
-  let max_area = 0;
-  let left = 0,
-    right = height.length - 1;
+  let max = 0;
+  let left = 0, right = height.length - 1;
   while (left < right) {
     const curArea = (right - left) * Math.min(height[left], height[right]);
-    if (curArea > max_area) {
-      max_area = curArea;
-    }
+    max = Math.max(curArea, max)
     if (height[left] < height[right]) {
       left++; // 左边较矮，往右移，或许会变高
     } else {
       right--; // 右边较矮，往左移，或许会变高
     }
   }
-  return max_area;
+  return max;
 };
