@@ -33,10 +33,10 @@ var countWords = compose(count, splitIntoSpaces);
 countWords("hello your reading about composition"); // 5
 
 // 组合多个函数 composeN
-var composeN = (...args) => 
-    args.reverse().reduce(
-        (f, g) => (...arg) => g.call(null, f.apply(null, arg)),
-        args.shift()
+var composeN = (...fns) => 
+    fns.reverse().reduce(
+        (f, g) => (...args) => g.call(null, f.apply(null, args)),
+        fns.shift()
     )
 
 let splitIntoSpaces = (str) => str.split(" ");   // 分割成数组
@@ -48,6 +48,13 @@ countWords2("hello your reading about composition", "1 2 3"); // 5
 // 组合多个函数 pipe
 var pipe = (...fns) => (...args) =>
     fns.reduce((acc, fn) => fn(acc), args);
+
+// 这种形式处理了args是多个参数的情况？
+var pipe2 = (...fns) => 
+    fns.reduce(
+        (f, g) => (...args) => g.call(null, f.apply(null, args)),
+        fns.shift()
+    )
 
 let splitIntoSpaces = (str) => str.split(" ");   // 分割成数组
 let count = (array) => array.length;  // 计算长度

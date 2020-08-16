@@ -9,27 +9,20 @@
  */
 // 方式1
 var objectFactory = function () {
-    const obj = {}
     // 取出构造函数 和 实参
     const [ctor, ...args] = arguments
     // 将构造函数的原型挂到obj.__proto__上
     // 效果：obj模拟成Person的实例
-    obj.__proto__ = ctor.prototype;
+    // 方式一、
+    // const obj = {}
+    // obj.__proto__ = ctor.prototype;
+    // 方式二、
+    const obj = Object.create(ctor.prototype)
     const ret = ctor.apply(obj, args)
     if ((typeof ret === 'object' || typeof ret === 'function') && ret !== null) {
         return ret;
     }
     return obj;
-}
-// 方式2
-var objFactory = function () {
-    // 取出构造函数 和 实参
-    const [ctor, ...args] = arguments
-    // 创建ctor实例 obj
-    var obj = Object.create(ctor.prototype);
-    // 使用apply函数运行args, 把 obj 绑定到 this
-    var ret = ctor.apply(obj, args);
-    return ret instanceof Object ? ret : obj;
 }
 
 function Person(name, age) {
