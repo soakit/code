@@ -2,7 +2,7 @@
     https://www.cnblogs.com/chenwenhao/p/11708105.html
     创建偏应用函数时，
     第一个参数接收一个函数，剩余参数是第一个传入函数所需参数。
-    剩余参数待传入的用undefined占位，执行偏应用函数时填充undefined
+    剩余参数待传入的参数用undefined占位，执行偏应用函数时填充undefined
 */
 var partial = (fn, ...partialArgs) => {
     return function (...args) {
@@ -10,7 +10,8 @@ var partial = (fn, ...partialArgs) => {
         for (let i = 0; i < partialArgs.length && args.length > argIndex; i++) {
             if (partialArgs[i] === undefined || i === this.undefinedIndex) {
                 this.undefinedIndex = i
-                partialArgs[i] = args[argIndex++];
+                partialArgs[i] = args[argIndex];
+                argIndex++
             }
         }
         return fn.apply(null, partialArgs);
@@ -32,13 +33,21 @@ var countWords = compose(count, splitIntoSpaces);
 countWords("hello your reading about composition"); // 5
 
 // 组合多个函数 composeN
-var composeN = (...fns) => value =>
-    fns.reverse().reduce((acc, fn) => fn(acc), value);
+var composeN = (...args) => 
+    args.reverse().reduce(
+        (f, g) => (...arg) => g.call(null, f.apply(null, arg)),
+        args.shift()
+    )
 
+let splitIntoSpaces = (str) => str.split(" ");   // 分割成数组
+let count = (array) => array.length;  // 计算长度
+var countWords2 = composeN(count, splitIntoSpaces);
+countWords2("hello your reading about composition", "1 2 3"); // 5
+      
 // 管道和组合的概念很类似，都是串行处理数据。唯一区别就是执行方向：组合从右向左执行，管道从左向右执行。
 // 组合多个函数 pipe
-var pipe = (...fns) => value =>
-    fns.reduce((acc, fn) => fn(acc), value);
+var pipe = (...fns) => (...args) =>
+    fns.reduce((acc, fn) => fn(acc), args);
 
 let splitIntoSpaces = (str) => str.split(" ");   // 分割成数组
 let count = (array) => array.length;  // 计算长度
