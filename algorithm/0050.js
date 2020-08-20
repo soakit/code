@@ -29,5 +29,5 @@ var myPow = function (x, n) {
     }
 
     var r = myPow(x, n / 2)
-    return (n & 1) ? r * r * x : r * r
+    return n & 1 ? r * r * x : r * r
 };

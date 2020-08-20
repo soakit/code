@@ -14,14 +14,11 @@
 */
 var numIslands = function(grid) {
 	let num=0;
-	
 	if (!grid || !grid.length) {
 		return num
 	}
-	
 	const maxRow = grid.length - 1;
 	const maxCol = grid[0].length - 1;
-	
 	// 上下左右置0
 	const overturn = function(i, j) {
 		if (i<0 || j<0 || i>maxRow || j>maxCol) {
@@ -35,7 +32,6 @@ var numIslands = function(grid) {
 			overturn(i+1, j)
 		}
 	}
-	
 	for (let i=0; i<= maxRow; i++) {
 		for(let j=0; j<= maxCol; j++) {
 			if (grid[i, j] === '1') {
