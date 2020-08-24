@@ -12,7 +12,7 @@ let sum = (a, b, c, d) => {
 // 柯里化函数，返回一个被处理过的函数 
 function curry(fn) {
     const length = fn.length;
-    
+
     const curryFn = (...args) => (...args2) => {
         const allArgs = args.concat(args2);
         if (allArgs.length === length) {
@@ -27,7 +27,38 @@ console.log(sumPlus(1)(2)(3)(4))
 console.log(sumPlus(1, 2)(3)(4))
 console.log(sumPlus(1, 2, 3)(4))
 
-// 第二种：不固定传入参数，随时执行
+// 第二种：不固定传入参数
+/* 
+    1.用临时变量缓存所有参数
+    2.输出的始终是函数
+    3.调用函数时，自动执行函数的toString
+*/
+let sum = (...arr) => {
+    return arr.reduce((a, b) => {
+        return a + b
+    }, 0)
+}
+const curry = (fn, ...initialArgs) => {
+    let allArgs = []
+    const curried = (...args) => { // args接收新参数
+        allArgs = [...allArgs, ...args]
+        return curried
+    }
+    curried.toString = () => {
+        const res = fn(...allArgs)
+        allArgs = []
+        return res
+    }
+    return curried(...initialArgs)
+}
+var sumPlus = curry(sum)
+console.log(sumPlus(1, 2, 3, 4))
+console.log(sumPlus(1, 2, 3)(4))
+console.log(sumPlus(1)(2)(3)(4))
+console.log(sumPlus(1, 2, 3)(4)(5))
+console.log(sumPlus())
+
+// 第三种：不固定传入参数，随时执行
 /**
  * 当然了，柯里化函数的主要作用还是延迟执行，执行的触发条件不一定是参数个数相等，也可以是其他的条件。
  * 例如参数个为0的情况，那么我们需要对上面curry函数稍微做修改
