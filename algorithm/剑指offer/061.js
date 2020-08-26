@@ -25,7 +25,7 @@ var isStraight = function (nums) {
         }
         min = Math.min(tmp, min)
         max = Math.max(tmp, max)
-        if (!obj[tmp]) {
+        if (obj[tmp] === undefined) {
             obj[tmp] = 0
         }
         obj[tmp]++
