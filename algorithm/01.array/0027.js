@@ -16,7 +16,7 @@
 */
 
 // 解法1: 使用临时变量存储当前的不重复位置，此法不改变元素的相对位置
-/* var removeElement = function(nums, val) {
+var removeElement = function(nums, val) {
     let index = 0;
     const len = nums.length
     for (let i=0; i<len;i++) {
@@ -27,7 +27,7 @@
         }
     }
     return index
-}; */
+};
 
 // 解法2: 双指针；不等时左指针右移、相等时将右指针位置值赋给左指针，然后右指针左移
 var removeElement = function(nums, val) {
