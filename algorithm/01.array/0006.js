@@ -16,17 +16,23 @@ string convert(string s, int numRows);
 // 每 2n-2 即为一个周期
 var convert = function (s, numRows) {
   if (numRows == 1) return s;
-  const arr = new Array[numRows]();
-  var chars = s.split('');
-  const len = chars.length;
+  const arr = new Array(numRows);
+  arr.fill('')
+  const len = s.length;
   let period = numRows * 2 - 2;
   for (let i = 0; i < len; i++) {
     let mod = i % period;
     if (mod < numRows) {
-      arr[mod] += chars[i];
+      arr[mod] += s[i];
     } else {
-      arr[period - mod] += chars[i];
+      arr[period - mod] += s[i];
     }
   }
-  return arr.join('');
+  var res = ''
+  for (const ch of arr) {
+    if (ch) {
+      res += ch;
+    }
+  }
+  return res;
 };
