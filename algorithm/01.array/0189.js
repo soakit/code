@@ -1,4 +1,5 @@
 /* 
+第189题: 旋转数组
 给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
 
 示例 1:
@@ -29,6 +30,7 @@ var rotate = function (nums, k) {
     // nums.unshift(...nums.splice(len - k))
     // nums.splice(0, 0, ...nums.splice(len - k))
 };
+
 // 解法2
 var rotate = function (nums, k) {
     // 剪枝
