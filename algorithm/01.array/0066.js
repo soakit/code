@@ -12,3 +12,21 @@
     输出: [4,3,2,2]
     解释: 输入数组表示数字 4321。 
 */
+/**
+ * @param {number[]} digits
+ * @return {number[]}
+ */
+var plusOne = function(digits) {
+    for (let i = digits.length - 1; i >= 0; i--) {
+      if (digits[i] !== 9) {
+        // 不等于9则进1退出循环
+        digits[i] += 1;
+        return digits;
+      } else {
+        // 所有项都是9的情况1
+        digits[i] = 0;
+      }
+    }
+    // 所有项都是9的情况2
+    return [1].concat(digits);
+  };
