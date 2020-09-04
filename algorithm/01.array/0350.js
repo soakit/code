@@ -12,4 +12,25 @@
     输出结果中每个元素出现的次数，应与元素在两个数组中出现的次数一致。
     我们可以不考虑输出结果的顺序。
  */
-
+const intersect = (nums1, nums2) => {
+  const map = {};
+  const arr = [];
+  for (const num of nums1) {
+    // 存下nums1数字的出现次数
+    if (map[num]) {
+      map[num]++;
+    } else {
+      map[num] = 1;
+    }
+  }
+  for (const num of nums2) {
+    // 遍历nums2看看有没有数字在nums1出现过
+    const val = map[num];
+    if (val > 0) {
+      // 出现过
+      arr.push(num); // 推入res数组
+      map[num]--;  // 匹配掉一个，就少了一个
+    }
+  }
+  return arr;
+};
