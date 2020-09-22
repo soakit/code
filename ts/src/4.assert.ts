@@ -18,3 +18,23 @@ function numFunc(numGenerator: NumGenerator | undefined) {
     // const num1 = numGenerator();  // ERROR
     const num2 = numGenerator!();
 }
+
+// 5. 确定赋值断言
+let x!: number; // 确定赋值断言
+initialize();
+console.log(2 * x); // Ok
+
+function initialize() {
+  x = 10;
+}
+
+// 6. 类型守卫
+// in/typeof/instanceof/
+// typeof 类型保护只支持两种形式：
+// typeof v === "typename" 和 typeof v !== typename，
+// "typename" 必须是 "number"， "string"， "boolean" 或 "symbol"。
+
+// 7. 自定义类型保护的类型谓词
+function isNumber(x: any): x is number {
+  return typeof x === "number";
+}
