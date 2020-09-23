@@ -38,3 +38,14 @@ function initialize() {
 function isNumber(x: any): x is number {
   return typeof x === "number";
 }
+
+// 8. 在 extends 条件语句中待推断的类型变量
+type ParamType<T> = T extends (param: infer p) => any ? p : T;
+
+interface IJack {
+  name: 'jack';
+  age: 25;
+}
+type Func = (user: IJack) => void;
+type Param = ParamType<Func>;
+type Test = ParamType<string>;
