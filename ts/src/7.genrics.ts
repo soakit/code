@@ -9,7 +9,10 @@ let person: People = {
 function pluck<T, K extends keyof T>(obj: T, names: K[]): T[K][] {
   return names.map((item) => obj[item]);
 }
-console.log(pluck(person, ["name", "name"]));
+console.log(pluck(person, ["name", "name"])); // ['jack', 'jack']
+
+// typeof
+type P1 = typeof person
 
 type Keys = "a" | "b"
 type Obj = {
