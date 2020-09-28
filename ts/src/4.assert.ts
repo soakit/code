@@ -39,8 +39,16 @@ function isNumber(x: any): x is number {
   return typeof x === "number";
 }
 
+/* 
+type ReturnType<T> = T extends (
+  ...args: any[]
+) => infer R ? R : any; 
+*/
+// 以上代码中 infer R 就是声明一个变量来承载传入函数签名的返回值类型，
+// 简单说就是用它取到函数返回值的类型方便之后使用。
+
 // 8. 在 extends 条件语句中待推断的类型变量
-type ParamType<T> = T extends (param: infer p) => any ? p : T;
+type ParamType<T> = T extends (param: infer P) => any ? P : T;
 
 interface IJack {
   name: 'jack';
