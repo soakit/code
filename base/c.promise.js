@@ -57,7 +57,7 @@ const MyPromise = (function () {
             // 添加失败回调函数队列
             this._rejectedQueues = []
 
-            // 添加resovle时执行的函数
+            // 添加resolve时执行的函数
             const resolveFn = val => {
                 const run = () => {
                     if (this.state !== PENDING) return
@@ -77,7 +77,7 @@ const MyPromise = (function () {
                     };
                     /**
                      * 如果resolve的参数为Promise对象，则必须等待该Promise对象状态改变后,
-                     * 当前Promsie的状态才会改变，且状态取决于参数Promsie对象的状态
+                     * 当前Promise的状态才会改变，且状态取决于参数Promise对象的状态
                     */
                     if (val instanceof MyPromise) {
                         val.then(value => {

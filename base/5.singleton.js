@@ -1,7 +1,7 @@
 var getSingle = function (fn) {
     var ret;
-    return function () {
-        return ret || (ret = fn.apply(this, arguments))
+    return function (...args) {
+        return ret || (ret = fn.apply(this, args))
     }
 }
 

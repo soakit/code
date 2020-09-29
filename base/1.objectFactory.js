@@ -19,7 +19,7 @@ var objectFactory = function () {
     // 方式二、
     const obj = Object.create(ctor.prototype)
     const ret = ctor.apply(obj, args)
-    if ((typeof ret === 'object' || typeof ret === 'function') && ret !== null) {
+    if ((typeof ret === 'object' || typeof ret === 'function') && ret) {
         return ret;
     }
     return obj;
