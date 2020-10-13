@@ -14,7 +14,7 @@ export default class VueRouter {
 
     init() {
         this.bindEvents();
-        this.createRouteMap();
+        this.createRouteMap(this.$options.routes);
         this.initComponent();
     }
 
@@ -29,12 +29,11 @@ export default class VueRouter {
     }
 
     // 创建路由映射表
-    createRouteMap() {
-        this.$options.routes.forEach(item => {
+    createRouteMap(routes){
+        routes.forEach(item => {
+            this.routeMap[item.path] = item;
             if (item.children) {
-                this.createRouteMap.call(item)
-            } else {
-                this.routeMap[item.path] = item;
+                this.createRouteMap(item.children)
             }
         });
     }
