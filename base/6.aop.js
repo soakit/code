@@ -13,13 +13,13 @@ Function.prototype.after = function (afterFn) {
     }
 }
 
-var fncc = function () {
+var fn_aop = function () {
     console.log('fn...')
 }
 
-fncc = fncc.before(function () {
+fn_aop = fn_aop.before(function () {
     console.log('before...')
 }).after(function () {
     console.log('after...')
 })
-fncc();
+fn_aop();
