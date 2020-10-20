@@ -11,20 +11,26 @@
     输出: ""
     解释: 输入不存在公共前缀。 
 */
-var longestCommonPrefix = function(strs) {
-    if (strs.length < 1) {
-      return ''
-    }
-    const commonPrefix = strs[0]
-    let len = commonPrefix.length
-    for (let i=1; i<strs.length; i++) {
-      let str = strs[i]
-      for (let j=0; j<len; j++) {
-        if (commonPrefix[j] !== str[j]) {
-          len = j
-          break
-        }
+var longestCommonPrefix = function (str) {
+  // 剪枝
+  if (str.length < 1) {
+    return "";
+  }
+  // 1. 取数组中的第一个串
+  // 2. 从第二项开始遍历数组
+  // 3. 两两比较取得公共前缀的最长索引(先取得第一个串和第二个串的公共前缀的最长索引A，
+  // 然后再在索引A内比较第一个串和第三个串取得索引B，以此类推，得出索引N)
+  // 4. 截取第一个串的[0, N)
+  const firstStr = str[0];
+  let len = firstStr.length;
+  for (let i = 1; i < str.length; i++) {
+    const tmp = str[i];
+    for (let j = 0; j < len; j++) {
+      if (firstStr[j] !== tmp[j]) {
+        len = j;
+        break;
       }
     }
-    return commonPrefix.slice(0, len)
-  };
+  }
+  return firstStr.slice(0, len);
+};
