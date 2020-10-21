@@ -1,8 +1,8 @@
 /* 
-    第15题：三数之和
-    给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，
-    使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
-    注意：答案中不可以包含重复的三元组。 
+  第15题：三数之和
+  给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，
+  使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
+  注意：答案中不可以包含重复的三元组。 
 */
 var threeSum = function (nums) {
   let res = [];
@@ -11,7 +11,7 @@ var threeSum = function (nums) {
   if (nums[0] <= 0 && nums[length - 1] >= 0) {
     // 优化1: 整个数组同符号，则无解
     for (let i = 0; i < length - 2; i++) {
-      if (nums[i] === nums[i - 1]) { // 如果与前一项相等，则跳过
+      if (nums[i] === nums[i - 1]) { // 如果与前一项相等则跳过(前一项已经处理过了)
         continue;
       }
       if (nums[i] > 0) break; // 优化2: 最左值为正数则一定无解
