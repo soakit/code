@@ -14,23 +14,15 @@
  * @param {TreeNode} root
  * @return {boolean}
  */
-var isBalanced = function(root) {
-    if (root == null) return true;
-
-    if (!isBalanced(root.Left) || !isBalanced(root.Right)) {
-        return false;
+var isBalanced = function (root) {
+  var balanceFn = function (node) {
+    if (!node) return 0;
+    const left = balanceFn(node.left);
+    const right = balanceFn(node.right);
+    if (left === -1 || right === -1 || Math.abs(left - right) > 1) {
+      return -1;
     }
-    var leftH = getHeight(root.Left) + 1;     
-    var rightH = getHeight(root.Right) + 1;   
-    if (Math.abs(leftH-rightH) > 1) {
-        return false;
-    }
-    return true;
+    return Math.max(left, right) + 1;
+  };
+  return balanceFn(root) !== -1;
 };
-
-function getHeight(root){
-    if (root == null) {
-        return 0;
-    }
-    return Math.max(getHeight(root.Left), getHeight(root.Right)) + 1;
-}
