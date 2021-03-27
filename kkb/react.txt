@@ -1,0 +1,56 @@
+虚拟DOM对象同步到真实DOM，叫协调
+协调就是如何更新
+
+jsx
+    react16使用babel-loader转成React.createElement，因此要导入react
+    react17自动从react的包里引入入口函数调用，无需导入react
+
+vnode
+    type
+        原生标签 
+            string, 如h1,a,div等
+        文本节点
+            null, 没有type
+        函数组件
+            function
+        类组件
+            原型上有isReactComponet
+    props
+        children
+            子节点
+        自有属性
+            className,href,id
+        自定义属性
+
+React.Fragment与空标签，在大部分场景可以相通。但如果需要加key时，空标签无法加属性，需要使用React.Fragment。
+
+dom diff
+只对同一层级下进行diff，如果是跨层级的话，只有创建节点和删除节点的操作
+    1. 删除
+        旧的有，新的无
+    2. 新增
+        旧的无，新的有
+    2. 替换
+        vnode和newVnode的类型不同或key不同
+    3. 更新
+        有相同的key和类型，但vnode和newVnode不同
+
+Tree diff: 对树的同一层级下进行diff
+    旧无新有，则创建节点
+    旧有新无，删除节点
+        Component diff: 对同一层级的组件进行比较
+            不同类型则替换
+            同一类型的组件继续Elment层的比较
+        Element diff：对同一层级的Element进行比较,遍历一遍找出要删除和插入的
+            INSERT_MARK_UP(插入)，旧无新有
+            REMOVE_NODE(删除)，旧有新无
+            MOVE_EXISTING(移动)，旧有新有
+
+        
+fiber结构
+    type 类型
+    props 属性
+    stateNode 原生dom节点
+    child 第一个子节点
+    sibling 下一个兄弟节点
+    return 父节点
