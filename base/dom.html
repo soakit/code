@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // createDocumentFragment与cloneNode提升性能
+      function insertFn() {
+        var ul = document.createElement("ul");
+
+        var frag = document.createDocumentFragment();
+        var originLi = document.createElement("li");
+        for (let i = 0; i < 1000; i++) {
+          var li = originLi.cloneNode();
+          li.innerText = i;
+          frag.appendChild(li);
+        }
+
+        ul.appendChild(frag);
+        return ul;
+      }
+
+      // document.body.append(insertFn())
+      // document.body.insertBefore(insertFn(), document.body.childNodes[0])
+      document.body.insertBefore(insertFn(), document.body.children[0]);
+    </script>
+  </body>
+</html>
