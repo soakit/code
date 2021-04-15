@@ -25,3 +25,9 @@ what:柯里化的核心其实是将一个多元函数转换成一个一元函数
 why 转换成一个一元函数: 函数组合
 
 单一原则-》函数组合
+
+## 练习
+
+> [练习-中文版](https://skyline75489.github.io/learnrx-zh-cn)
+>
+> > [练习-英文版](http://reactivex.io/learnrx/)
