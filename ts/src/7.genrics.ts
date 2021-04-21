@@ -52,3 +52,10 @@ type T3 = Extract<
 // 忽略对象某些属性（Pick和Exclude进行组合）
 // 从People剔除掉name
 type T4 = Omit<People, 'name'> // { age: number; }
+
+// 泛型支持递归
+// 泛型可以嵌套自己从而形成递归，比如我们最熟悉的单链表的定义就是递归的。
+type ListNode<T> = {
+  data: T;
+  next: ListNode<T> | null;
+};
