@@ -26,3 +26,5 @@ export function logPerson(user: User) {
 
 console.log("Users:");
 users.forEach(logPerson);
+
+// https://www.typescriptlang.org/docs/handbook/interfaces.html#introduction

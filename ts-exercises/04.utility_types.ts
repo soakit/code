@@ -103,3 +103,24 @@ console.log("Users of age 23:");
 filterUsers(persons, {
   age: 23,
 }).forEach(logPerson);
+
+// https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#predefined-conditional-types
+
+// getKeys方法
+const getKeys = Object.keys as <T extends object>(obj: T) => Array<keyof T>;
+function getObjectKeys<T>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[];
+}
+// const getObjectKeys2 = <T extends object>(obj: T) => Object.keys(obj) as (keyof T)[];
+const v = {
+  a: 1,
+  b: 2,
+};
+console.log(
+  // getKeys
+  getObjectKeys(v).reduce((accumulator: Number[], current) => {
+    accumulator.push(v[current]);
+    return accumulator;
+  }, [])
+);

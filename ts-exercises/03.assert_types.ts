@@ -47,7 +47,6 @@ export function logPerson(person: Person) {
 
 persons.forEach(logPerson);
 
-// In case if you are stuck:
 // https://www.typescriptlang.org/docs/handbook/advanced-types.html#using-the-in-operator
 
 // 类型断言2: is
@@ -76,3 +75,5 @@ persons.filter(isAdmin).forEach(logPerson2);
 
 console.log("Users:");
 persons.filter(isUser).forEach(logPerson);
+
+// https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
