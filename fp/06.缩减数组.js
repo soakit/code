@@ -1,4 +1,3 @@
-// 练习 10: 实现 concatAll()
 Array.prototype.concatAll = function () {
   var results = [];
   this.forEach(function (subArray) {
