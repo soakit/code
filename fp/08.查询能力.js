@@ -1,53 +1,48 @@
-// 练习 9: 把 movieLists 数组展开成包含 video 的 id 的数组
-var movieLists = [
-  {
-    name: "New Releases",
-    videos: [
-      {
-        id: 70111470,
-        title: "Die Hard",
-        boxart: "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
-        uri: "http://api.netflix.com/catalog/titles/movies/70111470",
-        rating: 4.0,
-        bookmark: [],
-      },
-      {
-        id: 654356453,
-        title: "Bad Boys",
-        boxart: "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
-        uri: "http://api.netflix.com/catalog/titles/movies/70111470",
-        rating: 5.0,
-        bookmark: [{ id: 432534, time: 65876586 }],
-      },
-    ],
-  },
-  {
-    name: "Dramas",
-    videos: [
-      {
-        id: 65432445,
-        title: "The Chamber",
-        boxart: "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
-        uri: "http://api.netflix.com/catalog/titles/movies/70111470",
-        rating: 4.0,
-        bookmark: [],
-      },
-      {
-        id: 675465,
-        title: "Fracture",
-        boxart: "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
-        uri: "http://api.netflix.com/catalog/titles/movies/70111470",
-        rating: 5.0,
-        bookmark: [{ id: 432534, time: 65876586 }],
-      },
-    ],
-  },
-];
+// 练习 25: 把数组转换成树
+var lists = [
+    {
+      id: 5434364,
+      name: "New Releases",
+    },
+    {
+      id: 65456475,
+      name: "Thrillers",
+    },
+  ],
+  videos = [
+    {
+      listId: 5434364,
+      id: 65432445,
+      title: "The Chamber",
+    },
+    {
+      listId: 5434364,
+      id: 675465,
+      title: "Fracture",
+    },
+    {
+      listId: 65456475,
+      id: 70111470,
+      title: "Die Hard",
+    },
+    {
+      listId: 65456475,
+      id: 654356453,
+      title: "Bad Boys",
+    },
+  ];
 
-var allVideoIdsInMovieLists = [];
-movieLists.forEach((movieList) => {
-  movieList.videos.forEach((video) => {
-    allVideoIdsInMovieLists.push(video.id);
-  });
-});
-console.log(allVideoIdsInMovieLists);
+console.log(
+  lists.map(function (list) {
+    return {
+      name: list.name,
+      videos: videos
+        .filter(function (video) {
+          return video.listId === list.id;
+        })
+        .map(function (video) {
+          return { id: video.id, title: video.title };
+        }),
+    };
+  })
+);
