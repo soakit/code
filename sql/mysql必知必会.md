@@ -151,3 +151,28 @@
       Sin() 返回一个角度的正弦
       Sqrt() 返回一个数的平方根
       Tan() 返回一个角度的正切
+    - 聚集函数
+      AVG() 返回某列的平均值
+      COUNT() 返回某列的行数
+      MAX() 返回某列的最大值
+      MIN() 返回某列的最小值
+      SUM() 返回某列值之和
+
+13. 分组的汇总
+    使用 WITH ROLLUP 关键字，可以得到每个分组以及每个分组汇总级别（针对每个分组）的值
+
+    ```sql
+    select vend_id, count(*) as num_prods
+    from products
+    group by vend_id with rollup;
+    ```
+
+14. 分组过滤
+    WHERE 过滤行，而 HAVING 过滤分组
+
+    ```sql
+    select cust_id, count(*) as orders
+    from orders
+    group by cust_id
+    having orders >= 2;
+    ```
