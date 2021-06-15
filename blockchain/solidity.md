@@ -43,7 +43,8 @@ sample.sol
       string name;
       uint age;
     }
-    zhangsan = Student(0, "zhangsan", 18)
+    Student stu;
+    stu = Student(0, "zhangsan", 18)
   ```
 
 - enum
