@@ -54,3 +54,10 @@ sample.sol
       male, female
     }
   ```
+
+- require：断言
+
+  ```sol
+    uint num = 1;
+    require(num > 0 && num < 3);
+  ```

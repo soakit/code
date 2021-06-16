@@ -18,7 +18,7 @@ contract Storage {
     Student stu;
 
     constructor() {
-        // msg.sender 合约部署者
+        // msg.sender 合约执行者
         owner = msg.sender;
         stu = Student(0, "zhangsan", 18);
     }
