@@ -10,13 +10,18 @@ Function.prototype.bind2 = function () {
             args.concat([...arguments])
         )
     }
-    var F = function () { }
+    //  方式一：
+    // var F = function () { }
     // 考虑没有prototype属性的情况，如箭头函数
-    if (this.prototype) {
-        F.prototype = this.prototype
-    }
+    // if (this.prototype) {
+    //     F.prototype = this.prototype
+    // }
+    // fbound.prototype = new F()
 
-    fbound.prototype = new F()
+    // 方式二：
+    if (this.prototytype) {
+        fbound.prototype = Object.create(this.prototype)
+    }
 
     return fbound
 }
