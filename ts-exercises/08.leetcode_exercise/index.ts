@@ -113,7 +113,7 @@ type TodoFunKeys = PickFunKeys<Todo>;
 // (arg: Promise<T>) => Promise<U> 变为 (arg: T) => U;
 
 // 取得范型中的值
-type ParamType<T> = T extends (param: infer P) => any ? P : T;
+type ParamType<T> = T extends ((param: infer P) => any) ? P : T;
 // infer P 表示待推断的函数参数。
 // 如果 T 能赋值给 (param: infer P) => any，则结果是 (param: infer P) => any 类型中的参数 P，否则返回为 T。
 
@@ -123,7 +123,7 @@ interface User {
 }
 type Fn = (user: User) => void;
 
-type Param = ParamType<Fn>;
+type Param = ParamType<Fn>; // User
 // Fn能赋值给 (param: User) => any，则结果是 User，即 type Param = User
 
 type TypeUser = ParamType<User>; // User
