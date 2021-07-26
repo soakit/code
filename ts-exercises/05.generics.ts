@@ -152,11 +152,6 @@ const users: User[] = [
   { type: "user", name: "Kate Müller", age: 23, occupation: "Astronaut" },
 ];
 
-type typeCallBack<T> = (fn: (response: ApiResponse<T>) => void) => void;
-// typeCallBack是一个函数签名，没有返回值
-// typeCallBack函数参数是fn，没有返回值
-// response是fn的参数，类型是ApiResponse<T>
-
 export function requestUsers(
   callback: (response: ApiResponse<User[]>) => void
 ) {
@@ -193,8 +188,6 @@ function startTheApp(callback: (error: Error | null) => void) {
       return callback(new Error(adminsResponse.error));
     }
 
-    console.log();
-
     requestUsers((usersResponse) => {
       console.log("Users:");
       if (usersResponse.status === "success") {
@@ -202,8 +195,6 @@ function startTheApp(callback: (error: Error | null) => void) {
       } else {
         return callback(new Error(usersResponse.error));
       }
-
-      console.log();
 
       requestCurrentServerTime((serverTimeResponse) => {
         console.log("Server time:");
@@ -247,13 +238,15 @@ startTheApp((e: Error | null) => {
 // https://www.typescriptlang.org/docs/handbook/generics.html
 
 // 10.范型示例：promise
-type CallbackBasedAsyncFunction<T> = (
-  callback: (response: ApiResponse<T>) => void
-) => void;
+type TypeCallBack<T> = (fn: (response: ApiResponse<T>) => void) => void;
+// TypeCallBack是一个函数签名，没有返回值
+// TypeCallBack函数参数是fn，没有返回值
+// response是fn的参数，类型是ApiResponse<T>
+
 type PromiseBasedAsyncFunction<T> = () => Promise<T>;
 
 function promisify<T>(
-  fn: CallbackBasedAsyncFunction<T>
+  fn: TypeCallBack<T>
 ): PromiseBasedAsyncFunction<T> {
   return () =>
     new Promise<T>((resolve, reject) => {
@@ -267,7 +260,7 @@ function promisify<T>(
     });
 }
 
-type SourceObject<T> = { [K in keyof T]: CallbackBasedAsyncFunction<T[K]> };
+type SourceObject<T> = { [K in keyof T]: TypeCallBack<T[K]> };
 type PromisifiedObject<T> = { [K in keyof T]: PromiseBasedAsyncFunction<T[K]> };
 
 export function promisifyAll<T extends { [key: string]: any }>(
@@ -281,19 +274,22 @@ export function promisifyAll<T extends { [key: string]: any }>(
 }
 
 const oldApi = {
-  requestAdmins(callback: (response: ApiResponse<Admin[]>) => void) {
+  // requestAdmins(callback: (response: ApiResponse<Admin[]>) => void) {
+  requestAdmins: <TypeCallBack<Admin[]>>function(callback){
     callback({
       status: "success",
       data: admins,
     });
   },
-  requestUsers(callback: (response: ApiResponse<User[]>) => void) {
+  // requestUsers(callback: (response: ApiResponse<User[]>) => void) {
+  requestUsers: <TypeCallBack<User[]>>function(callback) {
     callback({
       status: "success",
       data: users,
     });
   },
-  requestCurrentServerTime(callback: (response: ApiResponse<number>) => void) {
+  // requestCurrentServerTime(callback: (response: ApiResponse<number>) => void) {
+  requestCurrentServerTime: <TypeCallBack<number>>function(callback) {
     callback({
       status: "success",
       data: Date.now(),

@@ -107,20 +107,41 @@ filterUsers(persons, {
 // https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#predefined-conditional-types
 
-// getKeys方法
-const getKeys = Object.keys as <T extends object>(obj: T) => Array<keyof T>;
-function getObjectKeys<T>(obj: T): (keyof T)[] {
-  return Object.keys(obj) as (keyof T)[];
+interface P {
+  name: string;
+  age: number;
 }
-// const getObjectKeys2 = <T extends object>(obj: T) => Object.keys(obj) as (keyof T)[];
+// 取得对象的所有key的联合签名
+type PersonAttrs = keyof P; // 'name' | 'age'
+
+let p: PersonAttrs = 'age'
+
 const v = {
   a: 1,
   b: 2,
 };
-console.log(
-  // getKeys
-  getObjectKeys(v).reduce((accumulator: Number[], current) => {
-    accumulator.push(v[current]);
-    return accumulator;
-  }, [])
-);
+// 取得对象的所有key的联合签名的数组
+// 方式1
+const getObjectKeys0 = Object.keys as <T extends object>(
+  obj: T
+) => Array<keyof T>;
+
+// 方式2
+// function getObjectKeys1<T extends object>(obj: T): (keyof T)[] {
+function getObjectKeys1<T>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[];
+}
+
+let keys0 = getObjectKeys0(v); // ("a" | "b")[]
+keys0 = ["a", "b"];
+// keys0 = ["a", "b", "c"]; // error，只能是"a" | "b"
+
+let keys1 = getObjectKeys1(v); // ("a" | "b")[]
+keys1 = ["a", "b"];
+// keys1 = ["a", "b", "c"]; // error，只能是"a" | "b"
+
+const values = getObjectKeys1(v).reduce((accumulator, current) => {
+  accumulator.push(v[current]);
+  return accumulator;
+}, []);
+console.log(values);
