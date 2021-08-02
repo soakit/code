@@ -54,11 +54,12 @@ const curry = (fn, ...initialArgs) => {
     return curried(...initialArgs)
 }
 var sumPlus = curry(sum)
-console.log(sumPlus(1, 2, 3, 4))
-console.log(sumPlus(1, 2, 3)(4))
-console.log(sumPlus(1)(2)(3)(4))
-console.log(sumPlus(1, 2, 3)(4)(5))
-console.log(sumPlus())
+// 加上空字符串，让其隐式调用toString
+console.log('' + sumPlus(1, 2, 3, 4))
+console.log('' + sumPlus(1, 2, 3)(4))
+console.log('' + sumPlus(1)(2)(3)(4))
+console.log('' + sumPlus(1, 2, 3)(4)(5))
+console.log('' + sumPlus())
 
 // 第三种：不固定传入参数，随时执行
 /**
