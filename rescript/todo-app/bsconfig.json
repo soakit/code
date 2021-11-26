@@ -1,0 +1,25 @@
+{
+    "name": "my-res-app",
+    "reason": { // 吐槽一下 ReScript 改名后配置的同一还不彻底，很容易看着一脸懵
+      "react-jsx": 3 // 语言自带 JSX
+    },
+    "sources": {
+      "dir": "src",
+      "subdirs": true
+    },
+    "bsc-flags": ["-bs-super-errors"], // 更好的报错信息
+    "refmt": 3, // 格式化配置
+    "package-specs": [
+      {
+        "module": "es6",
+        "in-source": true
+      }
+    ],
+    "suffix": ".bs.js", // 生成的js文件后缀
+    "namespace": true,
+    "gentypeconfig": { // 使用 genType 宏可以生成对应语言的类型信息
+      "language": "typescript"
+    },
+  
+    "bs-dependencies": ["@rescript/react"]
+  }
