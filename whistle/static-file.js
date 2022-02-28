@@ -3,12 +3,14 @@
 
 # 新
 /77ircloud\.com\/manage\/pages\/v2/ http://127.0.0.1:10086/manage/pages/$1
-
 # 旧
 /77ircloud\.com\/manage\/pages\/(?!v2)/ http://127.0.0.1:10087/manage/pages/$1
-
 # 根据referer去到10086或10087
 vase://static-file /77ircloud\.com(\/js\/|\/chunk\/|\/css\/)/
+
+# vase 图片的返回头是text/html
+/77ircloud\.com\/static\// 127.0.0.1:10086 includeFilter://reqH:referer=/v2
+/77ircloud\.com\/static\// 127.0.0.1:10087 excludeFilter://reqH:referer=/v2
 
 **/
 const reg = /(\/css\/|\/js\/|\/chunk\/)(.+)/;
