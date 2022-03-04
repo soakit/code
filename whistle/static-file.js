@@ -12,6 +12,9 @@ vase://static-file /77ircloud\.com(\/js\/|\/chunk\/|\/css\/)/
 /77ircloud\.com\/static\// 127.0.0.1:10086 includeFilter://reqH:referer=/v2
 /77ircloud\.com\/static\// 127.0.0.1:10087 excludeFilter://reqH:referer=/v2
 
+# 转到生产去
+# ^test-app.77ircloud.com/api/*** suite-app.77ircloud.com/api/$1
+
 **/
 const reg = /(\/css\/|\/js\/|\/chunk\/)(.+)/;
 const matches = req.url.match(reg);
