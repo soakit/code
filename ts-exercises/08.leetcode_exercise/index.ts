@@ -111,9 +111,12 @@ type TodoFunKeys = PickFunKeys<Todo>;
 */
 // 怎么才能提取 Promise 泛型中的值?
 // (arg: Promise<T>) => Promise<U> 变为 (arg: T) => U;
+interface A {
+  asyncMethod<T, U>(input: Promise<T>): Promise<Action<U>>;
+}
 
 // 取得范型中的值
-type ParamType<T> = T extends ((param: infer P) => any) ? P : T;
+type ParamType<T> = T extends (param: infer P) => any ? P : T;
 // infer P 表示待推断的函数参数。
 // 如果 T 能赋值给 (param: infer P) => any，则结果是 (param: infer P) => any 类型中的参数 P，否则返回为 T。
 
@@ -128,3 +131,7 @@ type Param = ParamType<Fn>; // User
 
 type TypeUser = ParamType<User>; // User
 type TypeBoolean = ParamType<boolean>; // boolean
+
+type CloneA = ParamType<A>;
+// returnType CloneA;
+type b = CloneA;
