@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/subversion-authz-conf/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:00 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SVN的权限配置教程 · SVN使用教程</title><meta name="description" content="linux上svn服务端的权限配置教程，讲解如何配置分组、目录权限"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SVN的权限配置教程</h1><div class="post-info">2021年4月8日</div><div class="post-content"><p>本篇将讲解如何在Linux服务器上配置SVN仓库的目录权限、人员分组，全部配置都是通过命令在服务端完成。<br>如果你是使用 <a href="https://svnbucket.com/">SVNBucket</a> 则可以通过图形操作界面来完成所有操作。</p>
+<span id="more"></span>
+
+<p>首先确保你在服务器上已经存在一个SVN的仓库了，我们定位到仓库的<code>/conf</code>目录，这里就是存放配置的地方，这个目录下的几个配置文件介绍如下：<br><code>authz</code> 是权限配置文件，哪个目录有读写权限，设置什么分组，都是在这里配置<br><code>hooks-env.tmpl</code> 是钩子环境变量配置文件的模版，我们暂时用不到，可以忽略<br><code>passwd</code> 用来配置用户的帐号密码<br><code>svnserve.conf</code> 是subversion的总配置，如果你需要登陆并且授权的用户才可以访问，则需要像我样配置这个文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[general]</span><br><span class="line"># 是否允许未登录的用户访问，none表示不允许</span><br><span class="line">anon-access &#x3D; none</span><br><span class="line"># 登陆后的权限，可写</span><br><span class="line">auth-access &#x3D; write</span><br><span class="line"># 密码配置文件名</span><br><span class="line">password-db &#x3D; passwd</span><br><span class="line"># 权限配置文件名</span><br><span class="line">authz-db &#x3D; authz</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们着重来看下<code>authz</code>文件如何给每个用户配置不同目录的读写权限，一个经典的配置文件如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 分组配置</span><br><span class="line">[groups]</span><br><span class="line">admin &#x3D; zhangsan</span><br><span class="line">developer &#x3D; lisi,wangwu</span><br><span class="line"></span><br><span class="line"># 根目录的权限</span><br><span class="line">[&#x2F;]</span><br><span class="line">zhaokai &#x3D; rw</span><br><span class="line">* &#x3D;</span><br><span class="line"></span><br><span class="line"># 开发人员这个分组分配了&#x2F;src目录权限</span><br><span class="line">[&#x2F;src]</span><br><span class="line">@developer &#x3D; rw</span><br><span class="line">* &#x3D;</span><br></pre></td></tr></table></figure>
+
+<p>这个配置文件分两类配置，一类是分配配置，第二类是路径权限配置。<br><code>[groups]</code> 表示后面配置的是分组，我们可以把一些权限相同的用户都归为一个组，比如管理员<code>admin</code>，开发人员<code>developer</code>。多个成员要用英文逗号分隔开。<br>除了分组，其他的以中括号括起来的都表示这个仓库中的一个目录，甚至是可以一个文件名，因为SVN是可以支持文件级的权限配置的。<br>上面的配置，我们给<code>zhaokai</code>分配了根目录<code>/</code>的读写权限<code>rw</code>，除了<code>rw</code>，还有只读<code>r</code>，无权限（空）。<br><code>* = </code>是一个特殊的配置，表示除了上面配置的人，其他人都没有权限，这行配置需要放在每个路径配置的最后。<br><code>/src</code>目录我们给开发组的所有成员配置了读写权限，注意这里配置的是一个分组，需要以<code>@</code>符号开头，这个分组你必须先在上面配置过，否则会报错找不到分组。</p>
+<p>好了，权限配置文件就是这么的简单，但是如果你管理的项目比较多，人员多，经常这样修改配置文件是非常危险的，可能稍微不留神就配置错了，从而导致整个仓库无法访问。如果你经常需要管理SVN项目，建议你使用<a href="https://svnbucket.com/">SVNBucket</a> 它提供了可视化的配置界面，不需要到服务器上手动配置这些，方便并且安全。</p>
+</div></article></div></main><footer><div class="paginator"><a href="../centos-install-svn/index.html" class="prev">上一篇</a><a href="../svnserve-tutorial/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/subversion-authz-conf/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:00 GMT -->
+</html>

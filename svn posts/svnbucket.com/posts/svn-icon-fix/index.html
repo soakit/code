@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/svn-icon-fix/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:11 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SVN 不显示状态图标的解决方法 · SVN使用教程</title><meta name="description" content="如果你的电脑安装 TortoiseSVN 之后没有，SVN 目录没有显示状态图标，这篇文章告诉你如何解决。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SVN 不显示状态图标的解决方法</h1><div class="post-info">2022年1月1日</div><div class="post-content"><p>如果你的电脑安装 TortoiseSVN 之后没有，SVN 目录没有显示状态图标，这篇文章告诉你如何解决。</p>
+<span id="more"></span>
+
+<h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><p>有很多软件都会给 Windows 目录设置状态图标，例如一些网盘软件，当然还有 TortoiseSVN。<br>它们是按照优先级来决定显示哪个的，如果 TortoiseSVN 被排在后面，就会导致状态图标显示不出来.</p>
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><p>目录图标的显示顺序是在注册表定义的,我们可以通过修改注册表来调整这个顺序<br>WIN + R 打开运行窗口,输入<code>regedit</code>打开注册表<br><img src="open.png" alt="open"></p>
+<p>找到这个位置:<br><code>\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers</code><br>箭头所指目录就是定义了图标显示顺序,可以看到 TortoiseSVN 排在了两个网盘的后面<br><img src="before.png" alt="before"></p>
+<p>我们可以通过在前面增加空格来提高他的排序，注意这里增加的空格数量要比前面的网盘目录多，这样才能排到最前面去。</p>
+<p>按 F2 进行目录名修改,调整后如下图，改完后你可以 F5 刷新下，会发现排序已经到最前面了.</p>
+<p><img src="after.png" alt="after"></p>
+<p>最后，打开任务管理器，重启下资源管理器就好了<br><img src="restart.png" alt="restart"></p>
+<p>最后，给大家推荐一个非常好用的在线 SVN 托管仓库：<a href="https://svnbucket.com/">SVNBucket</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="../svn-externals/index.html" class="prev">上一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/svn-icon-fix/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:12 GMT -->
+</html>

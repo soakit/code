@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/svn-ignore/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:36 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> svn忽略教程 · SVN使用教程</title><meta name="description" content="本篇教你如何使用svn添加忽略，包括忽略文件和忽略整个目录，单个项目添加忽略和添加全局忽略，使用 TortoiseSVN 怎么添加忽略"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">svn忽略教程</h1><div class="post-info">2021年4月3日</div><div class="post-content"><p>工作中，通常会有一些文件是不需要提交的，比如前端开发经常遇到的<code>node_modules</code>目录，以及一些build过程生成的临时文件。<br>添加忽略可以减少不必要的提交，节省提交和更新时间，还可以节省 SVN 服务端的空间占用。</p>
+<span id="more"></span>
+<p>如果你不想看文字教程，你还可以看 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1k4411m7mP?p=4">SVN添加忽略视频教程</a></p>
+<h6 id="1-添加忽略"><a href="#1-添加忽略" class="headerlink" title="1. 添加忽略"></a>1. 添加忽略</h6><p>假设我们现在需要忽略掉<code>useless.txt</code>这个文件，使用TortoiseSVN非常方便。<br>选中要忽略的文件，右键菜单选择<code>Add to ignore list</code>：<br><img src="vrG2QKUMzog5Fpn.jpg" alt="svn ignore添加忽略"></p>
+<p>注意，如果你需要精确忽略这个文件，选择<code>useless.txt</code><br>选择<code>*.txt</code>将忽略项目中所有这个后缀的文件。</p>
+<p>除了在目录中右键选择文件进行忽略，我们还可以在提交窗口直接进行文件忽略：<br><img src="rT9CHFnVdhIjZBX.jpg" alt="svn忽略文件"></p>
+<p>当你添加忽略后，被忽略的文件就会从提交窗口消失<br>另外，你会发现，当前文件的父目录会有一个属性修改的变动，我们需要把这个变动提交到上去，这样其他协作者也同步了这个忽略。</p>
+<p>如果你双击查看diff，你会发现，其实他里面就是记录了我们刚忽略的文件名字。<br><img src="EqJl5UcKjpnf48t.png" alt="svn添加忽略后属性变动提交"></p>
+<p>以上是文件的忽略，目录的忽略操作步骤是一样的，不一样的是，忽略目录后，他会把目录下的所有文件都忽略。<br>另外，你可能发现了，忽略选项里有些是加了<code>(recursively)</code>的，这个表示递归忽略，这样子目录也会忽略</p>
+<h6 id="2-忽略已提交过的文件"><a href="#2-忽略已提交过的文件" class="headerlink" title="2. 忽略已提交过的文件"></a>2. 忽略已提交过的文件</h6><p>上面我们忽略的文件都是还未提交过的新文件，如果是已经提交到服务器的文件，添加忽略时稍微有点不一样，这时候提示多了<code>Unversion</code>，这表示取消版本管理并且添加到忽略列表。<br><img src="xiftLIZl5SunOKq.png" alt="svn添加忽略"></p>
+<p>上面我们把<code>test.html</code>文件取消了版本管理并且添加到忽略列表了，这时候的提交变动我们看下：<br><img src="BjPLb6KprZvUuRd.png" alt="svn忽略已经提交的文件"></p>
+<p>会发现多了一个删除<code>test.html</code>的提交，这表示从版本库中删除这个文件，我们需要把这个变动提交上去，这样其他协作者也会把这个文件取消版本管理</p>
+<h6 id="3-取消忽略"><a href="#3-取消忽略" class="headerlink" title="3. 取消忽略"></a>3. 取消忽略</h6><p>如果你需要取消忽略，操作跟添加忽略时一样，再操作一次就行了，只是提示语变成了 Remove from …<br><img src="cancel-ignore.jpg" alt="svn取消忽略"></p>
+<h6 id="4-添加全局忽略"><a href="#4-添加全局忽略" class="headerlink" title="4. 添加全局忽略"></a>4. 添加全局忽略</h6><p>假设有些文件我们是需要所有项目都进行忽略的，我们可以添加全局忽略。<br>非常简单，右键–&gt;TortoiseSVN–&gt;Settings，打开SVN的设置页面，填写需要忽略的内容<br><img src="iIR7rHN3LcSTvsW.png" alt="svn全局忽略"><br>你会发现，它默认就已经添加了很多文件的忽略，你可以往里面添加更多需要忽略的文件，也可以删除不需要忽略的，对全部项目生效。</p>
+<p>更多阅读：<a href="../svn-commands-tutorial/index.html#%E6%B7%BB%E5%8A%A0%E5%BF%BD%E7%95%A5-ignore">SVN 命令行添加忽略</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="../svn-config-authz/index.html" class="prev">上一篇</a><a href="../cornerstone-tutorial/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/svn-ignore/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:38 GMT -->
+</html>

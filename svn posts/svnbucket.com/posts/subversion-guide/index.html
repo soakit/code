@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/subversion-guide/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:04 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Subversion简介和指引 · SVN使用教程</title><meta name="description" content="Subversion简介和指引，什么是Subversion，用来做什么，有什么用，为什么要用"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Subversion简介和指引</h1><div class="post-info">2021年4月20日</div><div class="post-content"><p>Subversion(也叫SVN)是最流行的版本管理软件之一，最早是在2000年由 CollabNet 公司发布，作为CVS的更好替代，迅速的流行了起来。</p>
+<span id="more"></span>
+
+<h6 id="Subversion简介"><a href="#Subversion简介" class="headerlink" title="Subversion简介"></a>Subversion简介</h6><p>有非常多的大型项目都在使用它做代码版本管理，包括Apache Software Foundation，Free Pascal, FreeBSD, GCC, Mono, SourceForge。<br>因为有文件级的权限控制，成为企业代码安全管理的唯一选择。</p>
+<p>如果一个开发团队不使用版本管理软件，管理代码将会是个灾难。<br>试想，任何人任何时间都能随意修改代码，而且没有记录，那我们如何找回昨天写的代码，如何查询某行代码是谁写的，发生bug如何找到代码编写人？</p>
+<p>SVN 可以管理和记录你代码的所有改动，不管你有多少文件，改动多少次，有多少人参与改动，都能一一记录，并且随时能找回之前的代码，还能确保你的代码不被删除，保证公司代码的安全。</p>
+<p>SVN的数据存储在服务器上，我们叫它为仓库（Repostory），这里记录了你所有文件的改动，包括完整的修改历史记录。<br>开发人员在他们的电脑上使用SVN的客户端跟服务端进行交互，可以随时查看到文件列表，修改记录，同步其他人的修改。<br>每次提交变动到服务器都会记录为一个版本号，我们可以通过历史看到这次提交的内容，变动了哪些文件，哪些行。</p>
+<p>你可以通过分支功能来管理你软件的不同版本，通常我们把trunk目录称作主干分支，其他分支我们存储到branches目录，可以用来保存v1.0、v2.0这样的不同软件版本。</p>
+<h6 id="为什么使用-Subversion"><a href="#为什么使用-Subversion" class="headerlink" title="为什么使用 Subversion"></a>为什么使用 Subversion</h6><p>SVN 跟 Git 比起来有很多优势。<br>SVN 的文件是存储到一个统一的中心化服务器，而 Git 则是在每个人的电脑上都复制了一份完整的仓库，这让SVN更有利于项目的扩展。<br>假设一个项目达到上百G后，Git需要每个开发人员的电脑都要复制这上百G的数据，显然非常的不合理，而 SVN 则可以根据需要，只检出自己需要的目录，不用浪费自己电脑的磁盘空间和传输带宽。</p>
+<p>SVN 对新手非常友好，上手容易，没有基础的用户也能快速学会并在工作中使用起来，而Git往往需要花费非常多的时间来学习它复杂的概念、命令、操作。</p>
+<p>SVN 有文件级的权限控制，可以设置什么人有什么文件的权限，这对企业代码安全来说是非常重要的，而 Git 因为是每个人电脑上都有完整的复制，根本没法做权限控制。</p>
+<p>另外 SVN 对二进制文件更加友好，占用的空间更好，因为它有独特的二进制diff算法，而Git对待二进制文件则很不友好，占用空间会非常大。</p>
+<p><a href="../svn-vs-git-difference/index.html">查看更多SVN 和 Git的差异对比</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="../svn-vs-git-difference/index.html" class="prev">上一篇</a><a href="../svn-life-cycle/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/subversion-guide/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:04 GMT -->
+</html>

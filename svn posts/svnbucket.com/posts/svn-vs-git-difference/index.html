@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/svn-vs-git-difference/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:02 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SVN和Git的真相与误解 · SVN使用教程</title><meta name="description" content="svn和git的区别，他们有什么优缺点，你的团队更适合使用哪个来管理代码，看完本篇文章会给你一个答案"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SVN和Git的真相与误解</h1><div class="post-info">2021年4月16日</div><div class="post-content"><p>网上有非常多的SVN和Git的比较，但是很多都是错误的，下面我们就来列举下那些常见的错误认识，以及svn和git的一些区别，他们有什么优缺点，以便让你更好的理解SVN和Git的当前真实情况，为你的团队挑选合适的工具。</p>
+<span id="more"></span>
+
+<h6 id="Git仓库远比SVN仓库占用空间小"><a href="#Git仓库远比SVN仓库占用空间小" class="headerlink" title="Git仓库远比SVN仓库占用空间小"></a>Git仓库远比SVN仓库占用空间小</h6><div class="tip">
+    错误
+</div>
+
+<p>SVN和Git的差异算法虽然有很多地方的不同，但是最终他们的数据存储都是相同的。最终的情况就是，同样的文件，它们两个存储所占用的空间大小非常相近。<br>但是当存储的文件大多是二进制文件时（例如，图片、安装包等）SVN存储所占用的空间反而会比Git的小很多，这是因为SVN所使用的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Xdelta">差异算法</a>能同时应用到二进制文件和文本文件中</p>
+<p><img src="https://smms.app/image/tybpauoMGz6Jfv5" alt="svn和git的存储空间大小比较"></p>
+<p>我们测试了WordPress的开源代码，分别使用SVN和Git存储，最终SVN的占用空间是186MB，Git的是169MB，相差只有17MB，<a target="_blank" rel="noopener" href="https://svnvsgit.com/#repository-size-benchmarks">具体数据</a></p>
+<h6 id="创建分支在SVN中非常的重"><a href="#创建分支在SVN中非常的重" class="headerlink" title="创建分支在SVN中非常的重"></a>创建分支在SVN中非常的重</h6><div class="tip">
+    错误，已经是过时的
+</div>
+在很多人印象里，SVN创建分支就是多复制了一份代码，需要非常多的空间和时间。
+事实上，从1.0版本（基本已经没人在用这么低的版本了），创建分支的算法已经改变了，分支变得非常的轻量。
+即使是非常大的项目中，你也可以随时创建分支来修复一个bug或开发一个新的功能。
+
+<p>我们用 WordPress 的源码对SVN和Git创建分支进行了测试，SVN在创建分支后增长了1308字节的空间占用，Git增加了360字节的空间占用，创建时间上，SVN消耗了0.093秒，Git花费了0.031秒。<a target="_blank" rel="noopener" href="https://svnvsgit.com/#branch-creation-benchmarks">详细信息</a></p>
+<h6 id="SVN每个目录都会有一个-svn的隐藏目录"><a href="#SVN每个目录都会有一个-svn的隐藏目录" class="headerlink" title="SVN每个目录都会有一个.svn的隐藏目录"></a>SVN每个目录都会有一个.svn的隐藏目录</h6><div class="tip">
+    错误，已经是过时的
+</div>
+
+<p>从1.7版本（在2011年发布）之后，已经变成了只会在根目录下存在.svn目录</p>
+<h6 id="没人再使用SVN了"><a href="#没人再使用SVN了" class="headerlink" title="没人再使用SVN了"></a>没人再使用SVN了</h6><div class="tip">
+    错误
+</div>
+
+<p>SVN还有非常多的公司和团队在用，OPPO、网易、Google等各类互联网大公司都在使用。因为SVN拥有Git无法替代的优势：文件级权限控制<br>对于公司和团队来说，代码的安全尤其重要，要针对不同职位的人员设置代码的可见范围，SVN的文件级权限控制完美的符合了公司的安全性要求，所以对于看重数据安全的公司来说，SVN是唯一的选择。<br>Git则是开源项目使用的更多，因为它在每个人的电脑上都存在一份完整的仓库代码，导致无法进行权限控制，也无法像SVN那样只检出部分目录的代码。</p>
+<h6 id="分布式的-Git-比集中式的-SVN-更优越"><a href="#分布式的-Git-比集中式的-SVN-更优越" class="headerlink" title="分布式的 Git 比集中式的 SVN 更优越"></a>分布式的 Git 比集中式的 SVN 更优越</h6><div class="tip">
+    错误，看情况而定
+</div>
+
+<p>分布式只是实现版本控制的另外一种方法。集中式和分布式都有他们的优缺点，我们应该根据实际情况来判断使用哪个更好。<br>分布式的缺点：没有权限控制；每个人都需要完全 clone 整个仓库，没法像 SVN 可以只 checkout 需要的子目录；没法锁定文件等等问题</p>
+<h6 id="Git-更适合大项目"><a href="#Git-更适合大项目" class="headerlink" title="Git 更适合大项目"></a>Git 更适合大项目</h6><div class="tip">
+    错误，大项目Git需要分割成多个小的仓库
+</div>
+
+<p>实际上Git并不适合用来存储大的项目，因为Git需要每个人都clone完整的仓库到自己电脑，2G的代码或许没什么问题，但是如果仓库到了10几G，几百G后，这会是一个非常大的问题。通常这就需要把一个大的仓库才分为多个小的仓库了。但是这就导致了其他几个问题：你需要管理多个仓库；破坏了原有项目的完整性；没法继续跟他们一起使用分支；<br>相反，SVN则没有仓库大小的限制和担心，因为我们可以按需只检出需要的目录。例如Apache的所有项目都是存储在一个仓库里，这完全没有问题。<br>更多阅读：<a target="_blank" rel="noopener" href="https://cacm.acm.org/magazines/2016/7/204032-why-google-stores-billions-of-lines-of-code-in-a-single-repository/fulltext">Google为什么存储百万行代码在一个仓库中</a></p>
+<h6 id="Git-有灵活强大的命令行操作"><a href="#Git-有灵活强大的命令行操作" class="headerlink" title="Git 有灵活强大的命令行操作"></a>Git 有灵活强大的命令行操作</h6><div class="tip">
+    正确，但是对新人并不友好
+</div>
+Git的设计初衷就是一套低级版本控制系统，允许高级用户通过命令玩一些黑科技，但是这并不安全，对初学者也不友好。
+Git 也因为没有良好的设计和混乱的命令受到了一些指责：这导致加长了学习曲线和大大增加了公司和团队的成本，特别是大型团队以及团队成员水平不一的情况。比如美术、策划、开发、这类人员，技术水平线不一。
+学会Git可能需要一个月，而学会SVN可能只需要1个小时
+
+<h6 id="Git-对二进制文件存储不友好"><a href="#Git-对二进制文件存储不友好" class="headerlink" title="Git 对二进制文件存储不友好"></a>Git 对二进制文件存储不友好</h6><div class="tip">
+    正确
+</div>
+Git 因为分布式原因，无法很好的处理二进制文件，他是基于复制模式来管理的，所以并不适合有很多二进制文件的项目，比如图片多的项目。
+
+
+</div></article></div></main><footer><div class="paginator"><a href="../svn-hooks-introduce/index.html" class="prev">上一篇</a><a href="../subversion-guide/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/svn-vs-git-difference/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:04 GMT -->
+</html>

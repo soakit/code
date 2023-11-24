@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/svn-problems/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:04 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> svn常见问题 · SVN使用教程</title><meta name="description" content="svn常见问题解答和SVNBucket一些常见问题讲解，SVN问题列举解答"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">svn常见问题</h1><div class="post-info">2021年4月29日</div><div class="post-content"><p>SVNBucket 的一些常见问题</p>
+<span id="more"></span>
+
+<h6 id="如何删除项目"><a href="#如何删除项目" class="headerlink" title="如何删除项目"></a>如何删除项目</h6><p>项目详情页，设置页面可以删除项目</p>
+<h6 id="如何删除文件"><a href="#如何删除文件" class="headerlink" title="如何删除文件"></a>如何删除文件</h6><p>无法直接在网站上删除，需要电脑上删除，然后提交</p>
+<h6 id="为什么删除了文件，空间没有减少"><a href="#为什么删除了文件，空间没有减少" class="headerlink" title="为什么删除了文件，空间没有减少"></a>为什么删除了文件，空间没有减少</h6><p>SVN 会记住所有的历史纪录，即使你删除了文件，它实际上还存在历史版本中，所以占用空间并不会减小，只有把整个项目删除才可以释放空间</p>
+<h6 id="为什么空间超额后无法删除文件？"><a href="#为什么空间超额后无法删除文件？" class="headerlink" title="为什么空间超额后无法删除文件？"></a>为什么空间超额后无法删除文件？</h6><p>删除文件也是提交，超额是无法再提交文件的，另外删除文件是不会减小空间的哦</p>
+<h6 id="删除了项目为什么我的空间没有变小"><a href="#删除了项目为什么我的空间没有变小" class="headerlink" title="删除了项目为什么我的空间没有变小"></a>删除了项目为什么我的空间没有变小</h6><p>删除项目，服务器需要把全部文件删除，需要点时间，项目越大，所需时间就越长，请耐心等待下再刷新喔</p>
+<h6 id="可以开发票吗"><a href="#可以开发票吗" class="headerlink" title="可以开发票吗"></a>可以开发票吗</h6><p>可以的（100元以上），购买后请联系客服，我们暂时只支持电子发票，请在购买后一个月内联系开票。</p>
+<h6 id="怎么购买"><a href="#怎么购买" class="headerlink" title="怎么购买"></a>怎么购买</h6><p>点击右上角自己的头像，就可以看到购买空间了</p>
+<h6 id="空间是什么意思"><a href="#空间是什么意思" class="headerlink" title="空间是什么意思"></a>空间是什么意思</h6><p>指的是存储空间，是所有项目的总空间</p>
+<h6 id="怎么上传已有代码"><a href="#怎么上传已有代码" class="headerlink" title="怎么上传已有代码"></a>怎么上传已有代码</h6><p>先checkout，然后把之前代码放入checkout后的目录，提交，更多详细教程请看：<a href="../svn-tutorial/index.html">SVN使用教程</a></p>
+<h6 id="忘记密码怎么办"><a href="#忘记密码怎么办" class="headerlink" title="忘记密码怎么办"></a>忘记密码怎么办</h6><p>到登陆页面，点击忘记密码</p>
+<h6 id="忘记用户名怎么办"><a href="#忘记用户名怎么办" class="headerlink" title="忘记用户名怎么办"></a>忘记用户名怎么办</h6><p>到登陆页面，点击忘记密码，输入邮箱找回<br>如果有checkout过项目，查看项目svn地址，地址里面有你的用户名</p>
+<h6 id="怎么添加用户"><a href="#怎么添加用户" class="headerlink" title="怎么添加用户"></a>怎么添加用户</h6><p>项目详情页-项目成员，可以添加项目成员，需要对方也注册了<code>SVNBucket</code>账号才能添加</p>
+<h6 id="我的上传速度很慢？"><a href="#我的上传速度很慢？" class="headerlink" title="我的上传速度很慢？"></a>我的上传速度很慢？</h6><p>我们的上传带宽是200M的，理论上可以达到20M/S的速度，但是还有几个因素会影响速度，如果你是一次性上传大量的文件，比如2000个文件，SVN客户端在上传之前需要对文件进行读取、压缩、写入、上传等一系列操作，大量的IO操作会导致速度大大下降；如果你只是上传一个文件（不管多大），速度就会非常块，你可以亲自试下喔。</p>
+<h6 id="Eclipse-报错-“cannot-negotiate-authentication-mechanism”"><a href="#Eclipse-报错-“cannot-negotiate-authentication-mechanism”" class="headerlink" title="Eclipse 报错 “cannot negotiate authentication mechanism”"></a>Eclipse 报错 “cannot negotiate authentication mechanism”</h6><p>在 Eclipse-&gt;window-&gt;preference-&gt;team-&gt;svn 中将 svn 接口设定为 svnkit。</p>
+</div></article></div></main><footer><div class="paginator"><a href="../install-svn-apache/index.html" class="prev">上一篇</a><a href="../idea-use-svn-tutorial/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/svn-problems/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:04 GMT -->
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/install-svn-apache/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:01 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Apache + SVN服务器搭建 · SVN使用教程</title><meta name="description" content="本篇讲解如何在CentOS 7上使用Apache来搭建SVN服务端，以及如何创建仓库，配置权限。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Apache + SVN服务器搭建</h1><div class="post-info">2021年4月25日</div><div class="post-content"><p>SVN 是最流行的版本管理软件之一，可以为源码或者文档记录每次的修改记录，是开发团队协作必备的工具。<br>这篇文档，我们将讲解如何使用Apache来搭建SVN服务端，Linux服务器我们使用CentOS 7为例，其他Linux版本操作也差不多。</p>
+<span id="more"></span>
+
+<blockquote>
+<p>如果你闲搭建自己的SVN服务端以及配置比较麻烦，推荐你使用 <a href="https://svnbucket.com/">SVNBucket</a>，提供了可视化的操作界面，所有操作都变得非常简单</p>
+</blockquote>
+<h6 id="第一步，安装-Apache"><a href="#第一步，安装-Apache" class="headerlink" title="第一步，安装 Apache"></a>第一步，安装 Apache</h6><p>使用 yum 安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install httpd</span><br></pre></td></tr></table></figure>
+
+<h6 id="第二步，安装-Subversion-和-mod-dav-svn-模块"><a href="#第二步，安装-Subversion-和-mod-dav-svn-模块" class="headerlink" title="第二步，安装 Subversion 和 mod_dav_svn 模块"></a>第二步，安装 Subversion 和 mod_dav_svn 模块</h6><p>CentOS 7 默认的源安装的 svn 是比较旧的版本，我们使用 wandisco 源安装SVN1.9版本。<br>新建文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;yum.repos.d&#x2F;wandisco-svn.repo</span><br></pre></td></tr></table></figure>
+<p>写入源内容</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">WandiscoSVN</span>]</span><br><span class="line"><span class="string">name=Wandisco</span> <span class="string">SVN</span> <span class="string">Repo</span></span><br><span class="line"><span class="string">baseurl=http://opensource.wandisco.com/centos/$releasever/svn-1.9/RPMS/$basearch/</span></span><br><span class="line"><span class="string">enabled=1</span></span><br><span class="line"><span class="string">gpgcheck=0</span></span><br></pre></td></tr></table></figure>
+<p>删除旧版本（如果存在）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum remove subversion*</span><br><span class="line">yum clean all</span><br></pre></td></tr></table></figure>
+<p>开始安装 Subversion</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install subversion</span><br></pre></td></tr></table></figure>
+
+<p>为了Apache能提供SVN服务，我们还需要安装一个Apache的模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install mod_dav_svn</span><br></pre></td></tr></table></figure>
+
+<h6 id="第三步，Apache配置SVN"><a href="#第三步，Apache配置SVN" class="headerlink" title="第三步，Apache配置SVN"></a>第三步，Apache配置SVN</h6><p>修改svn配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;httpd&#x2F;conf.modules.d&#x2F;10-subversion.conf</span><br></pre></td></tr></table></figure>
+<p>文件内容应该如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LoadModule dav_svn_module     modules&#x2F;mod_dav_svn.so</span><br><span class="line">LoadModule authz_svn_module   modules&#x2F;mod_authz_svn.so</span><br><span class="line">LoadModule dontdothat_module  modules&#x2F;mod_dontdothat.so</span><br></pre></td></tr></table></figure>
+<p>我们配置一个/svn的访问路径，新增以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;Location &#x2F;svn&gt;</span><br><span class="line">	DAV svn</span><br><span class="line">	SVNParentPath &#x2F;svn</span><br><span class="line">	AuthName &quot;SVN Repos&quot;</span><br><span class="line">	AuthType Basic</span><br><span class="line">	AuthUserFile &#x2F;etc&#x2F;svn&#x2F;svn-auth</span><br><span class="line">	AuthzSVNAccessFile &#x2F;svn&#x2F;authz</span><br><span class="line">	Require valid-user</span><br><span class="line">&lt;&#x2F;Location&gt;</span><br></pre></td></tr></table></figure>
+
+<p>注意：上面我们指定了svn的授权文件<code>/svn/authz</code>和用户密码配置文件<code>/etc/svn/svn-auth</code>，后面我们将创建这两个文件。</p>
+<h6 id="第四步，创建SVN仓库"><a href="#第四步，创建SVN仓库" class="headerlink" title="第四步，创建SVN仓库"></a>第四步，创建SVN仓库</h6><p>创建仓库</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /svn</span><br><span class="line"><span class="built_in">cd</span> /svn</span><br><span class="line">sudo svnadmin create repo1</span><br><span class="line">sudo chown -R apache:apache repo1</span><br></pre></td></tr></table></figure>
+
+<p>创建用户帐号<code>user001</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir &#x2F;etc&#x2F;svn</span><br><span class="line">sudo htpasswd -cm &#x2F;etc&#x2F;svn&#x2F;svn-auth user001</span><br><span class="line">sudo chown root:apache &#x2F;etc&#x2F;svn&#x2F;svn-auth</span><br><span class="line">sudo chmod 640 &#x2F;etc&#x2F;svn&#x2F;svn-auth</span><br></pre></td></tr></table></figure>
+<p>如果需要创建更多帐号，参考以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo htpasswd -m &#x2F;etc&#x2F;svn&#x2F;svn-auth user002</span><br><span class="line">sudo htpasswd -m &#x2F;etc&#x2F;svn&#x2F;svn-auth user003</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意“-c”参数是表示创建文件，如果文件已经存在了，就不要再使用这个参数</p>
+</blockquote>
+<p>创建权限配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo cp &#x2F;svn&#x2F;repo1&#x2F;conf&#x2F;authz &#x2F;svn&#x2F;authz</span><br><span class="line">sudo vi &#x2F;svn&#x2F;authz</span><br></pre></td></tr></table></figure>
+<p>假设：<br>user001 是作为管理员<br>user002 是测试人员，拥有”repo1”仓库的读写权限<br>user003 是实习生，只有”repo1”仓库的读权限<br>我们的配置文件内容如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分组</span></span><br><span class="line">[groups]</span><br><span class="line">admin=user001</span><br><span class="line">repo1_user=user002</span><br><span class="line">repo1_trainee=user003</span><br><span class="line"></span><br><span class="line">[/]</span><br><span class="line">@admin=rw</span><br><span class="line"></span><br><span class="line">[repo1:/]</span><br><span class="line">@repo1_user=rw</span><br><span class="line">@repo1_trainee=r</span><br></pre></td></tr></table></figure>
+
+<h6 id="第五步，启动-Apache-服务，修改防火墙"><a href="#第五步，启动-Apache-服务，修改防火墙" class="headerlink" title="第五步，启动 Apache 服务，修改防火墙"></a>第五步，启动 Apache 服务，修改防火墙</h6><p>启动apache</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start httpd.service</span><br><span class="line">sudo systemctl enable httpd.service</span><br></pre></td></tr></table></figure>
+<p>开启http服务端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --zone&#x3D;public --permanent --add-service&#x3D;http</span><br><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<p>最后，我们就可以使用下面的地址访问到我们的svn仓库了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;&lt;your-server-ip&gt;&#x2F;svn&#x2F;repo1&#x2F;</span><br></pre></td></tr></table></figure></div></article></div></main><footer><div class="paginator"><a href="../svn-life-cycle/index.html" class="prev">上一篇</a><a href="../svn-problems/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/install-svn-apache/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:01 GMT -->
+</html>

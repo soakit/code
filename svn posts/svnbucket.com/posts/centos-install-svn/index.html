@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/centos-install-svn/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:00 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> CentOS7服务器上安装SVN1.9 · SVN使用教程</title><meta name="description" content="讲解在CentOS7服务器上如何安装subversion1.9"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">CentOS7服务器上安装SVN1.9</h1><div class="post-info">2021年4月7日</div><div class="post-content"><h6 id="1-设置-yum-源"><a href="#1-设置-yum-源" class="headerlink" title="1. 设置 yum 源"></a>1. 设置 yum 源</h6><p>使用vim创建文件 /etc/yum.repos.d/wandisco-svn.repo 然后添加下面的内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line">vim /etc/yum.repos.d/wandisco-svn.repo</span><br></pre></td></tr></table></figure>
+<p>写入内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[WandiscoSVN]</span><br><span class="line">name=Wandisco SVN Repo</span><br><span class="line">baseurl=http://opensource.wandisco.com/centos/<span class="variable">$releasever</span>/svn-1.9/RPMS/<span class="variable">$basearch</span>/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br></pre></td></tr></table></figure>
+
+<h6 id="2-安装-Subversion-1-9"><a href="#2-安装-Subversion-1-9" class="headerlink" title="2. 安装 Subversion 1.9"></a>2. 安装 Subversion 1.9</h6><p>在开始安装前，我们要先删除你机器上已经存在的svn（如果存在）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum remove subversion*</span><br><span class="line">yum clean all</span><br></pre></td></tr></table></figure>
+
+<p>现在可以使用yum安装了</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install subversion</span><br></pre></td></tr></table></figure>
+
+<h6 id="3-查看svn版本"><a href="#3-查看svn版本" class="headerlink" title="3. 查看svn版本"></a>3. 查看svn版本</h6><p>到这里，我们的svn安装就完成了，我们可以使用下面的命令查看版本号</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn --version</span><br></pre></td></tr></table></figure>
+<p>输出结果，看到1.9.7 说明你的安装是成功的了</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">svn, version 1.9.7 (r1800392)</span><br><span class="line">   compiled Aug 10 2017, 21:36:06 on x86_64-redhat-linux-gnu</span><br><span class="line"></span><br><span class="line">Copyright (C) 2017 The Apache Software Foundation.</span><br><span class="line">This software consists of contributions made by many people;</span><br><span class="line">see the NOTICE file <span class="keyword">for</span> more information.</span><br><span class="line">Subversion is open <span class="built_in">source</span> software, see http://subversion.apache.org/</span><br><span class="line"></span><br><span class="line">The following repository access (RA) modules are available:</span><br><span class="line"></span><br><span class="line">* ra_svn : Module <span class="keyword">for</span> accessing a repository using the svn network protocol.</span><br><span class="line">  - with Cyrus SASL authentication</span><br><span class="line">  - handles <span class="string">&#x27;svn&#x27;</span> scheme</span><br><span class="line">* ra_local : Module <span class="keyword">for</span> accessing a repository on <span class="built_in">local</span> disk.</span><br><span class="line">  - handles <span class="string">&#x27;file&#x27;</span> scheme</span><br><span class="line">* ra_serf : Module <span class="keyword">for</span> accessing a repository via WebDAV protocol using serf.</span><br><span class="line">  - using serf 1.3.7 (compiled with 1.3.7)</span><br><span class="line">  - handles <span class="string">&#x27;http&#x27;</span> scheme</span><br><span class="line">  - handles <span class="string">&#x27;https&#x27;</span> scheme</span><br><span class="line"></span><br><span class="line">The following authentication credential caches are available:</span><br><span class="line"></span><br><span class="line">* Plaintext cache <span class="keyword">in</span> /root/.subversion</span><br><span class="line">* Gnome Keyring</span><br><span class="line">* GPG-Agent</span><br></pre></td></tr></table></figure>
+
+<h6 id="4-其他命令"><a href="#4-其他命令" class="headerlink" title="4. 其他命令"></a>4. 其他命令</h6><p>安装完成后，实际上我们在服务器上就拥有了<code>svn</code>的客户端和服务端，像<code>checkout</code>/<code>update</code>这些命令都能使用了，不过你的使用命令来操作，如果你不会svn的命令，可以看下 <a href="../svn-commands-tutorial/index.html">svn命令教程</a><br><code>svn</code>的一些服务端命令也能使用，像创建仓库的<code>svnadmin create</code>也都是可以使用的</p>
+</div></article></div></main><footer><div class="paginator"><a href="../import-and-download/index.html" class="prev">上一篇</a><a href="../subversion-authz-conf/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/centos-install-svn/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:00 GMT -->
+</html>

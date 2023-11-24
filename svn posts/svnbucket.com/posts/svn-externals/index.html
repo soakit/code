@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/svn-externals/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:10 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 引用外部 SVN 项目 svn:externals 用法 · SVN使用教程</title><meta name="description" content="假如你的 SVN 项目分为客户端、服务端，它们需要用到同一份配置，那么可以在 /client/common 、 /server/common 目录中存放相同的配置文件，但是每次一方修改后都要手动复制修改到另外一个目录？这也太麻烦了吧，有没更好的方法呢？这篇文章给你讲解如何使用 svn:externals 完美的解决。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">引用外部 SVN 项目 svn:externals 用法</h1><div class="post-info">2022年1月1日</div><div class="post-content"><p>假如你的 SVN 项目分为客户端、服务端，它们需要用到同一份配置，那么可以在 /client/common 、 /server/common 目录中存放相同的配置文件，但是每次一方修改后都要手动复制修改到另外一个目录？这也太麻烦了吧，有没更好的方法呢？这篇文章给你讲解如何使用 svn:externals 完美的解决。</p>
+<span id="more"></span>
+
+<p>假设我们的目录结构如下图所示，服务端客户端都有一个 common 目录:<br><img src="dir.png" alt="目录结构"></p>
+<p>最简单的方法也是最笨的方法，就是每次修改后都手动复制文件到另外一个目录，人工确保两个目录的文件一致，这很容易出问题。</p>
+<p>稍微好点的方法是，在 /server/common 目录检出（checkout）一份 /client/common，这样省去了复制文件的麻烦，每次只需要到 common 目录进行 update 就行了。但是，我们必须记得要进去 common 目录进行更新才行，直接在外层目录进行 update 是不会更新的。</p>
+<p>其实，SVN 还有提供一个叫 externals 的属性，可以用来在目录中引入其他 SVN 地址目录，更新时还会同步自动更新这个引入的 external 目录。</p>
+<p>在你需要的目录，右键选择 TortoiseSVN - Properties：<br><img src="properties-menu.png" alt="svn properties"></p>
+<p>在打开的属性窗口中，我们点击新建添加外部（Externals）SVN 目录<br><img src="new-properties.png" alt="svn external"></p>
+<p>填写保存目录（Local path），外部 SVN 地址（URL)，最后点击确定<br><img src="add-external.png" alt="add-external"></p>
+<p>添加成功后，我们可以看到属性列表窗口已经列出来我们刚添加的地址了。<br>这样，我们就把客户端 /client/common 目录引入到了 /server/common<br><img src="after-add.png" alt="after-add"></p>
+<p>现在，我们更新试下，发现外部引入的 SVN 目录也会自动更新了，而且不需要进入 common 目录去更新，在父目录也是可以更新到的。<br>另外，这个外部引入的 SVN 目录，你一样可以进行修改提交，然后其他地方都能更新到这个修改。<br><img src="update.png" alt="update externals"></p>
+<blockquote>
+<p>提醒下大家，这个引入外部 SVN 目录是可以任何 SVN 地址的，不管你是不是同个 SVN 仓库都行。</p>
+</blockquote>
+<p>最后，给大家推荐一个非常好用的在线 SVN 托管仓库：<a href="https://svnbucket.com/">SVNBucket</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="../shelve/index.html" class="prev">上一篇</a><a href="../svn-icon-fix/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/svn-externals/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:11 GMT -->
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/svn-commands-tutorial/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:13 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> svn常用命令 · SVN使用教程</title><meta name="description" content="svn的一些常用命令教程，mac、服务器上没有图形化操作界面时必备"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">svn常用命令</h1><div class="post-info">2021年4月1日</div><div class="post-content"><p>SVN 的命令通常都很少用，在 windows 上，我们通常都是使用图形化的操作界面，例如 <a href="../svn-tutorial/index.html">TortoiseSVN</a>，提供了很好的图形化操作界面，上手简单方便。<br>但是有时候我们需要在服务器这类没有图形化操作界面的机器上使用 SVN，这时候我们就需要用到 SVN 的命令来操作了。<br>本篇给大家讲解一些 SVN 的常用命令，日常使用学会这些就足够了。</p>
+<span id="more"></span>
+
+<p>本文讲解的是 SVN 客户端的命令操作，你需要一个 SVN 服务端才能进行交互，如果你还没有 SVN 服务器，推荐你使用 <a href="https://svnbucket.com/">SVNBucket</a></p>
+<h3 id="代码检出-checkout"><a href="#代码检出-checkout" class="headerlink" title="代码检出 checkout"></a>代码检出 checkout</h3><p>这个命令会把 SVN 服务器上的代码下载到我们电脑上，checkout 也可以简写为 co</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">svn checkout svn://svnbucket.com/xxx/xxx</span><br><span class="line"><span class="comment"># 指定存储目录</span></span><br><span class="line">svn checkout svn://svnbucket.com/xxx/xxx save-dir</span><br><span class="line"><span class="comment"># 指定用户名密码。</span></span><br><span class="line">svn checkout svn://svnbucket.com/xxx/xxx --username xxxx --password xxx</span><br></pre></td></tr></table></figure>
+
+<h3 id="提交代码-commit"><a href="#提交代码-commit" class="headerlink" title="提交代码 commit"></a>提交代码 commit</h3><p>此命令可以把我们本地的修改提交到 SVN 服务器，这样其他同事就能更新到我们的代码了。<br>commit 可以简写为 ci，-m 参数后面跟的是本次提交的描述内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 描述是必须的，但是可以填写空字符串，不指定</span></span><br><span class="line">svn commit -m <span class="string">&quot;提交描述&quot;</span></span><br><span class="line"><span class="comment"># 只提交指定文件或目录</span></span><br><span class="line">svn commit /path/to/file-or-dir -m <span class="string">&quot;提交指定文件&quot;</span></span><br><span class="line"><span class="comment"># 指定后缀的所有文件</span></span><br><span class="line">svn commit *.js -m <span class="string">&quot;提交所有 js 文件&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="更新代码-update"><a href="#更新代码-update" class="headerlink" title="更新代码 update"></a>更新代码 update</h3><p>执行此命令后会把其他人提交的代码从 SVN 服务器更新到我们自己电脑上，update 也可以简写为 up</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新到最新</span></span><br><span class="line">svn update</span><br><span class="line"><span class="comment"># 更新到指定版本的代码。特别是最新版本代码有问题时，我们可以用这个命令回到之前的版本</span></span><br><span class="line">svn update -r xxx </span><br><span class="line"><span class="comment"># 仅更新指定文件或者目录</span></span><br><span class="line">svn up /path/to/file-or-dir</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加文件-add"><a href="#添加文件-add" class="headerlink" title="添加文件 add"></a>添加文件 add</h3><p>新建的文件，我们需要用 add 命令把它们加入 SVN 的版本管理，然后我们才可以提交它。<br>注意：添加后还需要进行提交喔。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加指定文件或目录</span></span><br><span class="line">svn add /path/to/file-or-dir</span><br><span class="line"><span class="comment"># 添加当前目录下所有 php 文件</span></span><br><span class="line">svn add *.php</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除文件-delete"><a href="#删除文件-delete" class="headerlink" title="删除文件 delete"></a>删除文件 delete</h3><p>此命令会从 SVN 移除版本控制，移除后你需要提交一下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">svn delete /path/to/file-or-dir</span><br><span class="line"><span class="comment"># 删除版本控制，但是本地依旧保留文件</span></span><br><span class="line">svn delete /path/to/file-or-dir --keep-local</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看日志-log"><a href="#查看日志-log" class="headerlink" title="查看日志 log"></a>查看日志 log</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前目录的日志</span></span><br><span class="line">svn <span class="built_in">log</span></span><br><span class="line"><span class="comment"># 查看指定文件或目录的提交日志</span></span><br><span class="line">svn <span class="built_in">log</span> /path/to/file-or-dir</span><br><span class="line"><span class="comment"># 查看日志，并且输出变动的文件列表</span></span><br><span class="line">svn <span class="built_in">log</span> -v</span><br><span class="line"><span class="comment"># 限定只输出最新的 5 条日志</span></span><br><span class="line">svn <span class="built_in">log</span> -l 5</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看变动-diff"><a href="#查看变动-diff" class="headerlink" title="查看变动 diff"></a>查看变动 diff</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前工作区的改动</span></span><br><span class="line">svn diff</span><br><span class="line"><span class="comment"># 查看指定文件或目录的改动</span></span><br><span class="line">svn diff /path/to/file-or-dir</span><br><span class="line"><span class="comment"># 本地文件跟指定版本号比较差异</span></span><br><span class="line">svn diff /path/to/file-or-dir -r xxx</span><br><span class="line"><span class="comment"># 指定版本号比较差异</span></span><br><span class="line">svn diff /path/to/file-or-dir -r 1:2 </span><br></pre></td></tr></table></figure>
+
+<h3 id="撤销修改-revert"><a href="#撤销修改-revert" class="headerlink" title="撤销修改 revert"></a>撤销修改 revert</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 撤销文件的本地修改</span></span><br><span class="line">svn revert test.php</span><br><span class="line"><span class="comment"># 递归撤销目录中的本地修改</span></span><br><span class="line">svn revert -R /path/to/dir</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加忽略-ignore"><a href="#添加忽略-ignore" class="headerlink" title="添加忽略 ignore"></a>添加忽略 ignore</h3><p>SVN 的忽略是通过设置目录的属性 prop 来实现的，添加后会有一个目录属性变动的修改需要提交，记得要提交一下喔，这样其他人也有了这个忽略配置。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 忽略所有 log 文件。注意最后有个点号，表示在当前目录设置忽略属性。</span></span><br><span class="line">svn propset svn:ignore <span class="string">&quot;*.log&quot;</span> .</span><br><span class="line"><span class="comment"># 递归忽略 global-ignores</span></span><br><span class="line">svn propset svn:global-ignores <span class="string">&quot;*.log&quot;</span> .</span><br><span class="line"><span class="comment"># 从文件读取忽略规则，一行一个规则。</span></span><br><span class="line">svn propset svn:ignore -F filename.txt .</span><br><span class="line"><span class="comment"># 打开编辑器修改忽略属性</span></span><br><span class="line">svn propedit svn:ignore .</span><br><span class="line"><span class="comment"># 查看当前目录的属性配置</span></span><br><span class="line">svn proplist . -v</span><br><span class="line"><span class="comment"># 删除当前目录的忽略设置</span></span><br><span class="line">svn propdel svn:ignore .</span><br></pre></td></tr></table></figure>
+<div class="tip">
+    忽略仅对还未添加到版本库的文件生效，已经在版本库里的文件，添加忽略后是不会自动删除的也不会忽略，需要手动 delete 命令删除下才行。
+</div>
+
+<p><a href="../svn-ignore/index.html">TortoiseSVN 添加忽略</a>会更加简单，也会自动执行删除命令。</p>
+<h3 id="查看状态-status"><a href="#查看状态-status" class="headerlink" title="查看状态 status"></a>查看状态 status</h3><p>任何时候，你可以用下面的命令查看当前工作目录的 SVN 状态喔，会列出来哪些文件有变动。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">svn status</span><br><span class="line">svn status /path/to/file-or-dir</span><br></pre></td></tr></table></figure>
+
+<h3 id="清理-cleanup"><a href="#清理-cleanup" class="headerlink" title="清理 cleanup"></a>清理 cleanup</h3><p>这个命令我们经常在 SVN 出现报错时可以执行一下，这样就会清理掉本地的一些缓存</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn cleanup</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看信息-info"><a href="#查看信息-info" class="headerlink" title="查看信息 info"></a>查看信息 info</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn info</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看文件列表-ls"><a href="#查看文件列表-ls" class="headerlink" title="查看文件列表 ls"></a>查看文件列表 ls</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">svn ls </span><br><span class="line"><span class="comment"># 指定版本号</span></span><br><span class="line">svn ls -r 100</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="查看文件内容"><a href="#查看文件内容" class="headerlink" title="查看文件内容"></a>查看文件内容</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看指定版本的文件内容，不加版本号就是查看最新版本的</span></span><br><span class="line">svn cat test.py -r 2</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="查看-blame"><a href="#查看-blame" class="headerlink" title="查看 blame"></a>查看 blame</h3><p>显示文件的每一行最后是谁修改的（出了BUG，经常用来查这段代码是谁改的）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn blame filename.php</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="地址重定向"><a href="#地址重定向" class="headerlink" title="地址重定向"></a>地址重定向</h3><p>如果你的 SVN 地址变了，不需要重新 checkout 代码，只需要这样重定向一下就可以了。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn switch --relocate 原 SVN 地址 新 SVN 地址</span><br></pre></td></tr></table></figure>
+
+<h3 id="分支操作"><a href="#分支操作" class="headerlink" title="分支操作"></a>分支操作</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建分支，从主干 trunk 创建一个分支保存到 branches/online1.0</span></span><br><span class="line">svn cp -m <span class="string">&quot;描述内容&quot;</span> http://svnbucket.com/repos/trunk http://svnbucket.com/repos/branches/online1.0</span><br><span class="line"><span class="comment"># 合并主干上的最新代码到分支上</span></span><br><span class="line"><span class="built_in">cd</span> branches/online1.0</span><br><span class="line">svn merge http://svnbucket.com/repos/trunk </span><br><span class="line"><span class="comment"># 分支合并到主干</span></span><br><span class="line">svn merge --reintegrate http://svnbucket.com/repos/branches/online1.0</span><br><span class="line"><span class="comment"># 切换分支</span></span><br><span class="line">svn switch svn://svnbucket.com/<span class="built_in">test</span>/branches/online1.0</span><br><span class="line"><span class="comment"># 删除分支</span></span><br><span class="line">svn rm http://svnbucket.com/repos/branches/online1.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看SVN帮助</span></span><br><span class="line">svn <span class="built_in">help</span></span><br><span class="line"><span class="comment"># 查看指定命令的帮助信息</span></span><br><span class="line">svn <span class="built_in">help</span> commit</span><br></pre></td></tr></table></figure>
+</div></article></div></main><footer><div class="paginator"><a href="../eclipse-svn/index.html" class="prev">上一篇</a><a href="../svn-hooks-tutorial/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/svn-commands-tutorial/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:13 GMT -->
+</html>

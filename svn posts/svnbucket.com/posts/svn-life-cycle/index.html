@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/svn-life-cycle/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:04 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SVN的生命周期 · SVN使用教程</title><meta name="description" content="讲解 SVN 从创建到结束的完整流程是怎样的，包括创建 SVN 仓库，checkout检出代码，提交代码，更新代码等"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SVN的生命周期</h1><div class="post-info">2021年4月21日</div><div class="post-content"><p>讲解 SVN 从创建到结束的完整流程是怎样的，包括创建 SVN 仓库，checkout检出代码，提交代码，更新代码等</p>
+<span id="more"></span>
+
+<h6 id="创建仓库"><a href="#创建仓库" class="headerlink" title="创建仓库"></a>创建仓库</h6><p>仓库是开发者存储他们代码的中心，仓库里不仅存储了提交的文件，还需要存储每次的修改变动记录，也就是要维护文件的每次修改记录。<br>我们使用<code>svnadmin create xxx</code>来创建一个仓库，这个只需要做一次。</p>
+<h6 id="检出-Checkout"><a href="#检出-Checkout" class="headerlink" title="检出 Checkout"></a>检出 Checkout</h6><p>检出就是把服务器上的代码下载到自己电脑上，我们电脑上的这份拷贝内容称之为工作空间，是每个开发人员自己的工作目录，在这里你可以对代码进行修改，之后可以把自己的改动提交到服务端。<br>通常这个操作也只需要一次，后续都是update操作，除非你的工作目录被破坏了，你可以删除目录重新checkout</p>
+<h6 id="更新-Update"><a href="#更新-Update" class="headerlink" title="更新 Update"></a>更新 Update</h6><p>更新是把服务器上的代码同步到本地，如果有其他开发者提交了代码，这个操作之后我们就获取到了他提交的代码。<br>日常开发中，我们应该经常 update 下代码，及时同步别人的修改内容。<br>如果长时间不更新，可能会跟服务器上的代码差异很大，这时候更新产生冲突的可能性就大了很多，而且累计更新很多东西时，你解决冲突也是比较麻烦的，你需要从一堆变动中了解如何合并才是正确的。</p>
+<h6 id="修改代码"><a href="#修改代码" class="headerlink" title="修改代码"></a>修改代码</h6><p>在检出代码后，我们就可以在自己电脑上开发功能、修改代码了。<br>修改也分为很多种，添加新文件我们称之为add，另外还有删除 remove，修改 modify。<br>新添加的文件/目录刚开始时补属于版本管理中的部分的，我们需要通过add操作把这些文件加入版本管理。<br>在本地删除文件/目录后，只是在我们的工作目录删除了，我们需要把这个删除变动提交到 SVN 服务端，这样文件才是真的从版本库删除了，这样其他人更新的时候才会同步删除那个文件。</p>
+<h6 id="检查变动"><a href="#检查变动" class="headerlink" title="检查变动"></a>检查变动</h6><p>当你改动你工作目录的代码后，你本地的代码就跟服务器上的产生了差异，在提交代码前进行一下改动检查是非常有必要的。<br>我们可以点击 TortoiseSVN 的提交，在提交窗口会列出来变动的文件列表，双击具体的文件就可以展示差异diff了。<br>这样我们可以确认下自己的改动是否正确，有时候不小心改动到了一些不相关的代码，这个检查方式能很好的帮你发现问题。</p>
+<h6 id="丢弃修改"><a href="#丢弃修改" class="headerlink" title="丢弃修改"></a>丢弃修改</h6><p>假设你提交检查diff时，发现某个文件的改动是错误的，我们想要撤销改动怎么办呢？直接右键选择 revert 就可以撤销本地修改了。<br>撤销本地修改后回到了修改前的样子<br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1k4411m7mP?p=3">撤销修改视频教程</a></p>
+<h6 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h6><p>多人工作时，产生冲突有时候是难免的，多个人同时修改了同个文件的同一行，这种时候 SVN 就不知道到底谁的修改是正确的了，需要我们手动的去解决冲突。<br>日常多更新代码，多提交自己的变动到服务端，保持本地代码尽量跟其他人的是同步的，就不那么容易产生冲突了。<br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1k4411m7mP?p=5">SVN解决冲突视频教程</a></p>
+<h6 id="提交代码"><a href="#提交代码" class="headerlink" title="提交代码"></a>提交代码</h6><p>在提交前进行变动的检查，查看diff前面已经说过了，是很有必要的。<br>等这些工作完成后，我们就可以把代码提交到 SVN 服务端了，SVN服务端是只有一个中心的，提交后大家都能更新到你的代码。<br>Git是分布式的，它的代码提交实际上只是提交到了自己本地的仓库，还需要push后才会推到服务端，其他人才能更新到他的代码，操作流程上比 SVN 复杂很多。</p>
+</div></article></div></main><footer><div class="paginator"><a href="../subversion-guide/index.html" class="prev">上一篇</a><a href="../install-svn-apache/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/svn-life-cycle/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:04 GMT -->
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/download-install-svn/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:40 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> svn下载和汉化 · SVN使用教程</title><meta name="description" content="svn客户端的下载和汉化，讲解 Windows 上 TortoseSVN 安装以及汉化教程"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">svn下载和汉化</h1><div class="post-info">2021年3月30日</div><div class="post-content"><p>SVN分为客户端、服务端，服务端用来存储代码，客户端用来提交代码到服务端，或者从服务端获取代码<br>SVNBucket提供的是SVN的服务端，也就是一个代码存储空间，或者说是SVN代码托管平台<br>在Windows上，我们最常用的svn客户端就是 TortoiseSVN/)</p>
+<span id="more"></span>
+
+<p>TortoiseSVN 当前最新版本是可以到 <a target="_blank" rel="noopener" href="https://tortoisesvn.net/downloads.html">官网</a> | <a target="_blank" rel="noopener" href="https://pc.qq.com/detail/4/detail_2684.html">第三方下载</a> 查看并下载</p>
+<p>如果你的系统是64位的，点击下图中红圈的按钮下载，如果是32位的系统，则点击第一个按钮<br><img src="syzeiMNr8LIXg3h.jpg" alt="下载tortoisesvn"></p>
+<p>下载完成后，直接就是双击运行，然后一直是下一步的进行安装就好了<br>此时你安装的是英文版，如果你需要汉化，则在下载页面继续往下滚动，找到如下图下载中文语言包。如果官网打不开，点击 <a target="_blank" rel="noopener" href="https://files-1255322048.cos.ap-chengdu.myqcloud.com/LanguagePack_1.14.5.29465-x64-zh_CN.msi">这里下载</a> 汉化包</p>
+<p><img src="AMzlLDkThOavoUX.jpg" alt="tortoisesvn汉化安装包"></p>
+<p>下载后也是直接双击安装就好了，这时候你的右键svn菜单就会变成中文的了</p>
+<p>如果还有什么不懂，还可以看下更详细的 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1k4411m7mP?p=1">svn视频教程</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="../svn-client-download/index.html" class="prev">上一篇</a><a href="../eclipse-svn/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/download-install-svn/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:41 GMT -->
+</html>

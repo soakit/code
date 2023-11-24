@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/svn-hooks-introduce/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:01 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SVN 钩子介绍 · SVN使用教程</title><meta name="description" content="钩子是什么，有什么用？SVN有哪些钩子，可以用来做什么，本篇将为大家解答。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SVN 钩子介绍</h1><div class="post-info">2021年4月12日</div><div class="post-content"><p>钩子是什么，有什么用？SVN有哪些钩子，可以用来做什么，本篇将为大家解答。</p>
+<span id="more"></span>
+
+<p>SVN 钩子，英文叫 hooks ，钩子这个说法可能有些人觉得太玄乎，实际上它就是一个回调而已，当某个事件发生后会回调告诉你。</p>
+<blockquote>
+<p>本篇讲解的是如何在 Linux 服务器上配置钩子，如果你是使用 SVNBucket 则可以在 web 端进行可视化配置钩子，参考<a href="../svn-hooks-tutorial/index.html">SVNBucket钩子配置教程</a></p>
+</blockquote>
+<p>SVN的钩子有很多，他们存放在服务端的<code>/hooks</code>目录:<br><img src="RXiOtfcb28Wk6ox.jpg" alt="svn hooks 钩子目录文件列表"></p>
+<p>上图中，我们看到文件后缀都是以<code>.tmpl</code>结尾，这些是模版文件，都是不会生效的，如果你想要某个钩子生效，只需要把<code>.tmpl</code>去掉就可以了。<br>他们都是 shell 脚本，如果是在windows上，则这个脚本的后缀应该是 exe/bat</p>
+<p>虽然上图中有9个钩子脚本，但是常用的只有两个：</p>
+<ol>
+<li>提交代码前触发的钩子<code>pre-commit</code></li>
+<li>提交代码后触发的钩子<code>post-commit</code></li>
+</ol>
+<p>提交前的钩子，最经典的应用就是用来检查是否有填写提交描述（commit log），</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这是仓库地址，更多的钩子环境变量还可以在 /conf/hooks-env 里面配置</span></span><br><span class="line">REPOS=<span class="string">&quot;<span class="variable">$1</span>&quot;</span></span><br><span class="line"><span class="comment"># 版本号，subversion里面专用的，跟我们看到的那个版本号不一样</span></span><br><span class="line">TXN=<span class="string">&quot;<span class="variable">$2</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 判断是否有填写提交描述，没有则不给提交并提示</span></span><br><span class="line">SVNLOOK=/usr/bin/svnlook</span><br><span class="line">msg=$(<span class="variable">$SVNLOOK</span> <span class="built_in">log</span> -t <span class="string">&quot;<span class="variable">$TXN</span>&quot;</span> <span class="string">&quot;<span class="variable">$REPOS</span>&quot;</span> | grep <span class="string">&quot;[a-zA-Z0-9]&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$msg</span>&quot;</span> ];<span class="keyword">then</span></span><br><span class="line">    <span class="comment"># 这行错误提示将会在svn客户端显示</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;必须填写提交描述&quot;</span>&gt;&amp;2;</span><br><span class="line">    <span class="comment"># 有错误，不允许提交，则返回非0错误吗</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Exit on all errors.</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="comment"># 全部检查都通过，则返回错误码0允许提交，</span></span><br><span class="line"><span class="built_in">exit</span> 0</span><br></pre></td></tr></table></figure>
+
+<p>如果你使用的是 TortoiseSVN 客户端，提示大概如下：<br><img src="sfY1w35B7yF4hVe.jpg" alt="svn pre-commit钩子未填写提交描述的错误提示"></p>
+<p>而提交后的钩子（post-commit）最经典的应用就是自动化更新服务器代码。<br>例如在代码提交后，我们可以判断提交描述中是否有<code>update</code>，有则自动更新服务器上的代码并且重启服务器以便立刻生效，这个在开发中是非常有用的，可以节省大量的繁琐操作。</p>
+<p>通常我们的 SVN 仓库跟我们的 web/app 服务器不在同个服务器上。所以我们可以配置钩子调用我们的一个 http 接口通知更新，如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 仓库路径</span></span><br><span class="line">REPOS=<span class="string">&quot;<span class="variable">$1</span>&quot;</span></span><br><span class="line"><span class="comment"># 仓库版本号，这个是跟我们客户端看到的版本号是一致的。</span></span><br><span class="line">REV=<span class="string">&quot;<span class="variable">$2</span>&quot;</span></span><br><span class="line">TXN_NAME=<span class="string">&quot;<span class="variable">$3</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 代码提交后，我们调用这个 http 接口，具体的逻辑由这个接口去处理</span></span><br><span class="line">curl -s -X POST -d <span class="string">&quot;repos=<span class="variable">$1</span>&amp;rev=<span class="variable">$2</span>&quot;</span> <span class="string">&quot;http://your-server-url/api/post-commit&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>你需要提供一个 http 接口，这个接口在收到调用后判断是否需要更新，然后可以执行 <code>svn update</code> 命令去更新你的代码目录，然后执行重启服务的命令。<br>如果你不会编写 http 接口，可以参考下 <a href="../svn-hooks-tutorial/index.html">SVNBucket钩子配置教程</a> ，里面提供更新、重启代码</p>
+<p>在上面的钩子脚本中，我们给接口传递了 repos 和 rev 参数，没有提交描述，这样就没办判断否包含<code>update</code>字符来决定是否更新服务器。<br>要获得提交描述也很简单，我们在脚本中调用 svnlook 命令去获取描述内容就可以，如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 仓库路径</span></span><br><span class="line">REPOS=<span class="string">&quot;<span class="variable">$1</span>&quot;</span></span><br><span class="line"><span class="comment"># 仓库版本号，这个是跟我们客户端看到的版本号是一致的。</span></span><br><span class="line">REV=<span class="string">&quot;<span class="variable">$2</span>&quot;</span></span><br><span class="line">TXN_NAME=<span class="string">&quot;<span class="variable">$3</span>&quot;</span></span><br><span class="line"><span class="built_in">log</span>=$(<span class="variable">$SVNLOOK</span> <span class="built_in">log</span> -t <span class="string">&quot;<span class="variable">$REV</span>&quot;</span> <span class="string">&quot;<span class="variable">$REPOS</span>&quot;</span> | grep <span class="string">&quot;[a-zA-Z0-9]&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加log参数，在 http 接口中我们可以判断是否包含update字符</span></span><br><span class="line">curl -s -X POST -d <span class="string">&quot;repos=<span class="variable">$1</span>&amp;rev=<span class="variable">$2</span>&amp;log=log&quot;</span> <span class="string">&quot;http://your-server-url/api/post-commit&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>还有更高级的判断方式是，判断提交者是否为指定用户、是否更新了某个文件/目录。<br>这需要调用更多的命令去查询这些信息，这里我们就不再深入了。<br>你也可以使用 <a href="https://svnbucket.com/">SVNBucket</a>，它提供了可视化的钩子配置界面，可以判断提交者、提交描述、变动文件，请参考 <a href="../svn-hooks-tutorial/index.html">SVNBucket钩子配置教程</a></p>
+<p><img src="cBxz1x.md.jpg" alt="svnbucket 添加钩子"><br>可配置多个触发链接，可查看触发log，可暂停<br><img src="vAPiw7zY364lrFb.jpg" alt="svnbucket钩子列表"></p>
+</div></article></div></main><footer><div class="paginator"><a href="../svnserve-tutorial/index.html" class="prev">上一篇</a><a href="../svn-vs-git-difference/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/svn-hooks-introduce/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:02 GMT -->
+</html>

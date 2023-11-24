@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/pycharm-svn/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:07 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Pycharm中使用SVN的配置教程 · SVN使用教程</title><meta name="description" content="本文讲解如何在Pycharm中开启SVN，以及他的一些日常使用方法"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Pycharm中使用SVN的配置教程</h1><div class="post-info">2021年5月12日</div><div class="post-content"><p>本文讲解如何在Pycharm中开启SVN，以及他的一些日常使用方法</p>
+<span id="more"></span>
+
+<h6 id="开启SVN"><a href="#开启SVN" class="headerlink" title="开启SVN"></a>开启SVN</h6><p>开启 svn 分两种情况，还未检出代码的，Pycharm 里直接检出就继承好了。<br>已经用其他SVN客户端（例如TortoiseSVN）检出代码的，开启下 SVN 就好了，如下图：<br><img src="gZ4vhstyGNpHOwo.jpg" alt="检出和直接开启SVN.jpg"></p>
+<p>开启成功后，你应该可以看到如下图状态，在这里我们就可以快速的更新代码、提交代码<br><img src="uiL16Z2acQkBRh7.jpg" alt="集成SVN后的状态.jpg"></p>
+<h6 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h6><p>集成后，在Pycharm的左下角可以看到一个 Version Control的界面，这里可以看到哪些文件变动了<br><img src="OGlFz6y93YLPast.jpg" alt="底部变动列表.jpg"></p>
+<p>另外 Pycharm 有个很方便的地方，你改动的行会有特殊的颜色表示，这样写代码时很容易就知道哪些地方修改过，方便快速定位<br><img src="kPKOYtcqdJz59El.jpg" alt="新增的一行颜色状态标识.jpg"></p>
+<p>Pycharm还自己有一个本地修改记录，如下图，从我创建hello.py，修改内容，到提交到svn，每次的修改都有记录，非常方便。<br>特别是在有时候你一部小心破坏了代码，但是又没提交到SVN，这时候从本地记录里面总能找到你的历史。<br><img src="AzZgFvxn8yNsGtD.jpg" alt="本地历史记录菜单入口.jpg"><br><img src="ZjRwAxuNIp17zVB.jpg" alt="本地修改记录.jpg"></p>
+<p>最后是提交界面，能方便的看到哪些文件变动了，改了什么东西<br><img src="h3fwBuD7aENWd4l.jpg" alt="提交界面.jpg"></p>
+<p>更多SVN的常用操作，可以查看<a href="../svn-tutorial/index.html">SVN使用教程</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="../idea-use-svn-tutorial/index.html" class="prev">上一篇</a><a href="../shelve/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/pycharm-svn/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:08 GMT -->
+</html>

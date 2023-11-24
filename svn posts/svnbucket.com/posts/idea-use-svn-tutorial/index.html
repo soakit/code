@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/idea-use-svn-tutorial/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:04 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> idea使用SVN教程 · SVN使用教程</title><meta name="description" content="本文讲解如何在IDEA中使用 Subversion 做代码版本管理，教你快速学会一些常用操作，例如：检出、提交、更新、查看变更内容等"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">idea使用SVN教程</h1><div class="post-info">2021年5月11日</div><div class="post-content"><p>本文讲解如何在IDEA中使用 Subversion 做代码版本管理，教你快速学会一些常用操作，例如：检出、提交、更新、查看变更内容等</p>
+<span id="more"></span>
+
+<p>本文的 SVN 服务端将使用 <a href="https://svnbucket.com/">SVNBucket</a>，如果你没有SVN的服务端，可以先注册一个。</p>
+<h6 id="开启-SVN-版本管理"><a href="#开启-SVN-版本管理" class="headerlink" title="开启 SVN 版本管理"></a>开启 SVN 版本管理</h6><p>打开 IDEA 时，会有一个弹窗，如果我们还没有检出代码，可以选择从 SVN 获取代码<br><img src="43nwBmflkKotRIg.jpg" alt="选择使用版本.jpg"></p>
+<p>注意这里要选择 Subversion 也就是 SVN，然后添加我们的仓库地址，确定。然后就可以把我们在SVN仓库里的代码检出了。<br><img src="e2uw1iTF3JKHcX8.jpg" alt="添加地址检出.jpg"></p>
+<p>在检出时，可能会弹出以下弹窗，我们要选择1.8版本以上<br><img src="WxZJmkvjV78bOan.jpg" alt="选择使用版本.jpg"></p>
+<p>如果你的项目代码一早就使用其他 SVN 客户端检出了，那我们可以用 IDEA 打开这个项目，然后开启 SVN 管理，如下图：<br><img src="VlNtenzRs9okbxY.jpg" alt="开启svn版本管理.jpg"><br>注意开启时，我们要选择使用 Subvesion<br><img src="kDzQLfW1KZ4EcXG.jpg" alt="选择使用版本.jpg"></p>
+<h6 id="SVN-常用操作"><a href="#SVN-常用操作" class="headerlink" title="SVN 常用操作"></a>SVN 常用操作</h6><p>如果你能看到如下图的图标，说明你已经成功集成了 SVN 版本管理，在这里我们可以非常方便的进行代码的更新、提交、查看提交记录等操作<br><img src="DraJp3TtLNMOiKq.jpg" alt="idea工作栏直接操作svn"></p>
+<p>点击提交代码，最上面是本地变更的文件列表，默认是打勾的，如果你不想提交某个文件，可以把勾去掉。<br>中间是填写提交描述内容，方便别人知道你本次提交的内容，这个会在我们查看提交历史时显示出来。<br>底部显示了我们选中文件的diff，会高亮显示变动的行<br>另外如果有需要我们可以勾选<code>Auto update after commit</code>，这样在每次提交成功后会自动更新下本地代码<br><img src="9Br3wDfgOA1Yi52.jpg" alt="idea提交代码.jpg"></p>
+<p>另外在idea的左下角也会多一个Subversion的tab，我们可以在这里看到更多信息<br>如下图，<code>Local Changes</code>显示的是本地的一些变动内容：<br><img src="zv9K6j3YGou7mIb.jpg" alt="idea本地变更.jpg"></p>
+<p>在这里，我们可以快速的查看到我们本地修改了什么文件，每个文件改了什么内容，并且有高亮显示修改的行，还能快速撤销修改，提交代码，非常的方便。<br>有个功能叫文件暂存，可能很多人没用过，它是可以把我们的本地代码修改暂时放到一个暂存区，不用提交到SVN服务端，等我们完成工作后再恢复过来。<br>典型的一个应用就是有时候你改了很多代码，代码跑不起来，但是需要紧急发个版本或者修复一个bug，这时候你不方便提交代码，就可以选择暂存你本地修改过的代码到置物架，等你修复完bug后再来恢复你的代码，想了解更多，这里有个<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1k4411m7mP?p=7">视频教程</a></p>
+<p>第二个tab<code>Repository</code>显示的是我们的一些提交记录，如下图：<br><img src="AbgPJUCsTfknBGq.jpg" alt="idea显示svn的提交历史记录.jpg"></p>
+<p>第三个tab<code>Incoming</code>在有新的内容可以更新时会显示出来，会列出来我们还未更新的一些提交记录，可以快速预览下，非常方便</p>
+<p>第四个tab显示的是我们工作区的一些信息，这里有个我们常用的功能，就是清理工作区，在我们工作区出现一些问题时，这个清理经常用到<br><img src="Kw4Oqpkc7hoIxZ1.jpg" alt="idea清理工作区"></p>
+</div></article></div></main><footer><div class="paginator"><a href="../svn-problems/index.html" class="prev">上一篇</a><a href="../pycharm-svn/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/idea-use-svn-tutorial/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:06 GMT -->
+</html>

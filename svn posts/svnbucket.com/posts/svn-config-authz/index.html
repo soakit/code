@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="zh-cn">
+<!-- Mirrored from svnbucket.com/posts/svn-config-authz/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:50 GMT -->
+<head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> svn权限设置 · SVN使用教程</title><meta name="description" content="SVN可以做到文件级的权限控制，为你团队中不同角色的人分配不同的权限，本篇文章讲解在SVNBucket中如何配置svn的权限，我们提供两种配置方式，不同的效果"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="../favicon.png"><link rel="stylesheet" href="../css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="../atom.xml" title="SVN使用教程"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="../atom.xml" title="SVN使用教程" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="../index.html" class="logo-link"><img src="../favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="../index.html" target="_self" class="nav-list-link">文章列表</a></li><li class="nav-list-item"><a href="https://svnbucket.com/" target="_blank" class="nav-list-link">在线 SVN 服务器</a></li><li class="nav-list-item"><a href="https://www.bilibili.com/video/BV1k4411m7mP" target="_blank" class="nav-list-link">SVN 视频教程</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">svn权限设置</h1><div class="post-info">2021年4月2日</div><div class="post-content"><p>SVN可以做到文件级的权限控制，可以为你团队中不同角色的人分配不同的权限。<br>本篇文章讲解在<code>SVNBucket</code>中如何配置svn的权限</p>
+<span id="more"></span>
+
+<p>权限分为3类：读写；只读；无权限<br>我们提供两种配置方式，不同的效果，可以根据你的实际情况选择</p>
+<h6 id="方式一，设置哪些目录有权限"><a href="#方式一，设置哪些目录有权限" class="headerlink" title="方式一，设置哪些目录有权限"></a>方式一，设置哪些目录有权限</h6><p>如下图，直接指定哪些目录用户有权限读写。<br>这种设置方式比较安全，用户只能读写指定的目录，就算增加了新文件夹，只要不是它的子目录，他都是没有权限看到的，但是缺点就是<code>checkout</code>的时候不能从根目录<code>checkout</code>，你只能从有权限的那个目录检出，如果是有多个目录，就要分别<code>checkout</code>了。<br><img src="1.png" alt="svnbucket里的svn权限设置"></p>
+<h6 id="方式二，设置哪些目录无权限"><a href="#方式二，设置哪些目录无权限" class="headerlink" title="方式二，设置哪些目录无权限"></a>方式二，设置哪些目录无权限</h6><p>这种配置方式最大的好处就是让你可以从根目录<code>checkout</code><br>如下图，假设我根目录有<code>trunk</code>、<code>branches</code>、<code>tags</code>三个目录，现在只想开放<code>/trunk</code>给开发人员，那么根目录<code>/</code>我们设置只读（这样他才能从根目录检出），<code>/trunk</code>目录设置读写，其他目录都设置为无权限。<br>这样配置就可以从根目录检出了，但是也存在一定的风险，例如，某天在根目录又多加了一个 xx 目录，如果你忘了给这个目录设置无权限，那么所有用户都会有 xx 目录的权限。<br><img src="2.png" alt="svnbucket里的svn权限设置"></p>
+<p>两种设置方式各有优缺点，大家自行选择，如果是追求安全，建议选择第一种方式。</p>
+</div></article></div></main><footer><div class="paginator"><a href="../svn-hooks-tutorial/index.html" class="prev">上一篇</a><a href="../svn-ignore/index.html" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2023 <a href="https://svnbucket.com/posts">SVNBucket</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="http://cdn.bootcss.com/mathjax/2.7.0/MathJaxb198.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y0CZFQQH6"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3Y0CZFQQH6');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "../../../hm.baidu.com/hmd41d.js?" + '58e98965a39ff5dab9a778a4a30eca6b';
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+</script><script>//- 图片预览
+let imgs = [...document.querySelectorAll("main img")]
+let wrap = document.querySelector(".wrap")
+imgs.forEach(img => {
+	img.addEventListener("click", previewImg)
+})
+function previewImg(){
+	let wrapper = document.createElement("div")
+	wrapper.id = "preview-image-wrapper"
+	let img = new Image()
+	img.src = this.src
+	wrapper.appendChild(img)
+	document.body.appendChild(wrapper)
+
+	//隐藏滚动条，防抖
+	document.documentElement.style.overflowY = "hidden"
+	wrap.style.paddingRight = "20px"
+
+	wrapper.addEventListener("click", function(){
+		document.body.removeChild(wrapper)
+		wrapper = null
+		document.documentElement.style.overflowY = "visible"
+		wrap.style = ""
+	})
+}</script></body>
+<!-- Mirrored from svnbucket.com/posts/svn-config-authz/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 23 Nov 2023 10:15:50 GMT -->
+</html>
