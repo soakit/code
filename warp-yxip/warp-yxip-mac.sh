@@ -31,7 +31,8 @@ endpointyx() {
     # 删除之前的优选结果文件，以避免出错
     rm -f result.csv
 
-    wget https://gitlab.com/Misaka-blog/warp-script/-/raw/main/files/warp-yxip/warp-darwin-$(archAffix) -O warp
+    # 下载优选工具软件，感谢 GitHub 项目：https://github.com/peanut996/CloudflareWarpSpeedTest
+    # 下载下来 CloudflareWarpSpeedTest，重命名为 warp
 
     # 取消 Linux 自带的线程限制，以便生成优选 Endpoint IP
     ulimit -n 102400
@@ -61,7 +62,7 @@ endpointyx() {
         echo "已经成功自动设置为第一个最优IP"
     fi
     # 删除 WARP Endpoint IP 优选工具及其附属文件
-    rm -f warp
+    # rm -f warp
 }
 
 menu() {
