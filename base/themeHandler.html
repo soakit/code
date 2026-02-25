@@ -402,9 +402,10 @@
 
           if (bestResult.loss < BEST_LOSS) {
             $(".realPixel").css("background-color", color.toString());
-            // 预览效果，底色需要应用到容器上
-            $(".filterPixel").parent().css("background-color", baseHex);
-            $(".filterPixel").attr("style", bestResult.filter);
+            $(".filterPixel").attr(
+              "style",
+              `background-color: ${baseHex}; ${bestResult.filter}`,
+            );
 
             console.log("🚀 ~ Found Filter:", bestResult.filter);
             $(".filterDetail").text(bestResult.filter);
