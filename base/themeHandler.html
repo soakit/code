@@ -334,6 +334,10 @@
           : null;
       }
 
+      const MAX_ATTEMPTS = 10000000000; // 最大尝试次数
+      const BATCH_SIZE = 2000; // 每批次尝试次数，防止阻塞 UI
+      const BEST_LOSS = 0.005; // 最佳损失值
+
       $(document).ready(() => {
         const syncBaseColor = () => {
           const baseHex = $("input.base").val();
@@ -359,19 +363,16 @@
             return;
           }
 
-          const MAX_ATTEMPTS = 10000000000;
           $button
             .prop("disabled", true)
             .text(`Computing (0/${MAX_ATTEMPTS})...`);
           $(".filterDetail").text(
-            "Searching for perfect filter (loss < 0.1)...",
+            `Searching for perfect filter (loss < ${BEST_LOSS})...`,
           );
 
           const color = new Color(rgb[0], rgb[1], rgb[2]);
           const solver = new Solver(color, baseRgb);
 
-          const BATCH_SIZE = 50; // 每批次尝试次数，防止阻塞 UI
-          const bestLoss = 0.03;
           let bestResult = { loss: Infinity };
           let attempts = 0;
 
@@ -382,7 +383,7 @@
               if (result.loss < bestResult.loss) {
                 bestResult = result;
               }
-              if (bestResult.loss < bestLoss) {
+              if (bestResult.loss < BEST_LOSS) {
                 return true; // 找到完美结果
               }
             }
@@ -399,7 +400,7 @@
 
           $button.prop("disabled", false).text("Compute Filters");
 
-          if (bestResult.loss < bestLoss) {
+          if (bestResult.loss < BEST_LOSS) {
             $(".realPixel").css("background-color", color.toString());
             // 预览效果，底色需要应用到容器上
             $(".filterPixel").parent().css("background-color", baseHex);
@@ -412,7 +413,7 @@
             );
           } else {
             $(".lossDetail").html(
-              `Loss: ${bestResult.loss.toFixed(4)}. <b>Could not find a result with loss < ${bestLoss} after ${MAX_ATTEMPTS} attempts.</b>`,
+              `Loss: ${bestResult.loss.toFixed(4)}. <b>Could not find a result with loss < ${BEST_LOSS} after ${MAX_ATTEMPTS} attempts.</b>`,
             );
             $(".filterDetail").text(
               "Calculation failed to meet precision requirements.",
